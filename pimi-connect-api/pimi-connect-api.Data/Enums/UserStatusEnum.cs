@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Models
 {
-    public enum UserStatus
+    public enum UserStatusEnum
     {
         Inaccessible,
         Accessible,

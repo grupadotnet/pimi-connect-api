@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace pimi_connect_app.Data.Models
 {
-    public class UserChat
+    public class UserChatEntity
     {
     }
 }
