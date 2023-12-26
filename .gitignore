@@ -8,7 +8,7 @@
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 :
 
-# Start custom .gitignore
+## Start custom .gitignore
 
 # MacOS files
 *.DS_Store
@@ -16,7 +16,11 @@
 # JetBrains files
 .idea/
 
-# End custom .gitignore
+# Environment files
+*appsettings.json
+*appsettings.Development.json
+
+## End custom .gitignore
 
 
 # User-specific files
