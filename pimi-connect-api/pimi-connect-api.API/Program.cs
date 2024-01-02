@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using pimi_connect_api.Hubs;
 using pimi_connect_api.Middleware;
 using pimi_connect_api.Services;
 using pimi_connect_api.Services.Interface;
@@ -15,6 +16,7 @@ builder.Services.AddScoped<ErrorHandlingMiddleware>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 
+builder.Services.AddSignalR();
 
 #region Add Swagger
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -49,6 +51,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<UserHub>("/hubs/user");
 
 app.Run();
 
