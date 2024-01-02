@@ -12,6 +12,6 @@ namespace pimi_connect_app.Data.Entities
         public Guid ProfilePictureKey { get; set; }
         public AuthEntity? Auth { get; set; }
         public AttachmentEntity? ProfilePicture { get; set; }
-        public List<UserChatEntity> UserChats { get; set; }
+        //public List<UserChatEntity>? UserChats { get; set; } // Unable to determine the relationship represented by navigation 'UserEntity.UserChats' of type 'List<UserChatEntity>'
     }
 }
