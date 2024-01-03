@@ -9,12 +9,13 @@ namespace pimi_connect_api.UnitTests.Base;
 public abstract class ControllerUnitTestsBase<TDtoType>: TestSettings  where TDtoType : class
 {
     #region Properties
+    protected AppDbContext TestDbContext { get; private set; }
     protected IConfiguration Configuration { get; private set; }
     protected IMapper Mapper { get; private set; }
-    protected AppDbContext TestDbContext { get; private set; }
     protected TestHelper Helper { get; }
-    protected int ExistingIndex { get; private set; }
-    protected int NotExistingIndex { get; private set; }
+    protected List<Guid> ExistingIds { get; private set; }
+    protected Guid ExistingId { get; private set; }
+    protected Guid NotExistingId { get; private set; }
     #endregion
     
     protected ControllerUnitTestsBase()
@@ -22,20 +23,19 @@ public abstract class ControllerUnitTestsBase<TDtoType>: TestSettings  where TDt
         SetupConfiguration();
         SetupMapper();
         SetupTestDbContext();
-        SetExistingIndex();
-        SetNotExistingIndex();
-        Helper = new TestHelper(TestDbContext);
+        
+        SetIds();
+        
+        Helper = new TestHelper(TestDbContext, Mapper);
     }
-
-    protected abstract TDtoType CreateDto(int i);
-
+    
     protected async Task Arrange(bool fillDb = true)
     {
         // reset DbContext
         await Helper.ResetDbContext();
     }
     
-    #region GetStatusAndContentFromResult
+    #region Get status and content from result
     protected (int Status, TDtoType? Content) GetStatusAndContentFromResult(IActionResult? result)
     {
         return GetStatusAndContentFromResult<TDtoType>(result);
@@ -89,7 +89,7 @@ public abstract class ControllerUnitTestsBase<TDtoType>: TestSettings  where TDt
     {
         var mapperConfig = new MapperConfiguration(cfg => 
         {
-            cfg.AddProfile(new MappingProfile()); 
+            cfg.AddProfile(new MappingProfile());
         });
 
         Mapper = new Mapper(mapperConfig);
@@ -107,18 +107,41 @@ public abstract class ControllerUnitTestsBase<TDtoType>: TestSettings  where TDt
     
     #endregion
 
-    #region Set ExistingIndex and NotExistingIndex
+    #region Set ExistingIds, ExistingId and NotExistingId
+    private void SetIds()
+    {
+        SetExistingIds();
+        SetExistingId();
+        SetNotExistingId();
+    }
+    
+    private void SetExistingIds()
+    {
+        ExistingIds = new List<Guid>();
+        
+        for (var i = 0; i < EntitiesCount; i++)
+        {
+            ExistingIds.Add(Guid.NewGuid());
+        }
+    }
 
-    private void SetExistingIndex()
+    private void SetExistingId()
     {
         var r = new Random();
-        ExistingIndex = r.Next(0, EntitiesCount);
+        
+        ExistingId = ExistingIds[r.Next(0, ExistingIds.Count)];
     }
 
-    private void SetNotExistingIndex()
+    private void SetNotExistingId()
     {
-        NotExistingIndex = EntitiesCount + 1;
-    }
+        var newGuid = Guid.NewGuid();
 
+        while (ExistingIds.Contains(newGuid))
+        {
+            newGuid = Guid.NewGuid();
+        }
+
+        NotExistingId = newGuid;
+    }
     #endregion
 }
