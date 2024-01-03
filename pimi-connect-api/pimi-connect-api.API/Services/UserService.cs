@@ -21,12 +21,14 @@ public class UserService : IUserService
     
     public async Task<UserDto> GetUserAsync(Guid id)
     {
+        #region Check and reject if doesn't exist
         var checkResult = await CheckIfExistsAndReturn(id);
 
         if (!checkResult.Exists)
         {
             throw new NotFound404Exception("User", id.ToString());
         }
+        #endregion
 
         var userDto = _mapper.Map<UserDto>(checkResult.Entity);
         return userDto;
@@ -37,7 +39,8 @@ public class UserService : IUserService
         var userEntity = await _dbContext
             .Users
             .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Email.ToLower().Trim() == email.ToLower().Trim());
+            .FirstOrDefaultAsync(u => 
+                u.Email.ToLower().Trim() == email.ToLower().Trim());
 
         if (userEntity == null)
         {
@@ -63,12 +66,14 @@ public class UserService : IUserService
 
     public async Task<UserDto> UpdateUserAsync(UserDto userDto)
     {
+        #region Check and reject if doesn't exist
         var checkResult = await CheckIfExistsAndReturn(userDto.Id);
         
         if (!checkResult.Exists)
         {
             throw new NotFound404Exception("User", userDto.Id.ToString());
         }
+        #endregion
 
         var userEntityToUpdate = _mapper.Map<UserEntity>(userDto);
         
@@ -82,7 +87,6 @@ public class UserService : IUserService
     public async Task<UserDto> AddUserAsync(UserDto userDto)
     {
         #region Check and reject if already exists
-
         var checkResultById = await CheckIfExistsAndReturn(userDto.Id);
         
         if (checkResultById.Exists)
@@ -98,7 +102,6 @@ public class UserService : IUserService
             throw new BadRequest400Exception(
                 $"User with email {userDto.Email} already exists.");
         }
-
         #endregion
         
         var userEntityToAdd = _mapper.Map<UserEntity>(userDto);
@@ -112,19 +115,20 @@ public class UserService : IUserService
 
     public async Task DeleteUserAsync(Guid id)
     {
+        #region Check and reject if doesn't exist
         var checkResult = await CheckIfExistsAndReturn(id);
         
         if (!checkResult.Exists)
         {
             throw new NotFound404Exception("User", id.ToString());
         }
+        #endregion
 
         _dbContext.Users.Remove(checkResult.Entity);
         await _dbContext.SaveChangesAsync();
     }
 
-    private async Task<(bool Exists, UserEntity? Entity)> CheckIfExistsAndReturn
-        (Guid id)
+    private async Task<(bool Exists, UserEntity? Entity)> CheckIfExistsAndReturn(Guid id)
     {
         var userEntity = await _dbContext
             .Users
