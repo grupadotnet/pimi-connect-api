@@ -21,7 +21,7 @@ public class UserService : IUserService
     
     public async Task<UserDto> GetUserAsync(Guid id)
     {
-        var checkResult = await CheckIfExistsAndReturn(id, asNoTracking: true);
+        var checkResult = await CheckIfExistsAndReturn(id);
 
         if (!checkResult.Exists)
         {
@@ -83,8 +83,7 @@ public class UserService : IUserService
     {
         #region Check and reject if already exists
 
-        var checkResultById = await CheckIfExistsAndReturn(
-            userDto.Id, asNoTracking: true);
+        var checkResultById = await CheckIfExistsAndReturn(userDto.Id);
         
         if (checkResultById.Exists)
         {
@@ -92,8 +91,7 @@ public class UserService : IUserService
                 $"User with id {userDto.Id} already exists.");
         }
         
-        var checkResultByEmail = await CheckIfExistsAndReturn(
-            userDto.Email, asNoTracking: true);
+        var checkResultByEmail = await CheckIfExistsAndReturn(userDto.Email);
         
         if (checkResultByEmail.Exists)
         {
@@ -126,45 +124,22 @@ public class UserService : IUserService
     }
 
     private async Task<(bool Exists, UserEntity? Entity)> CheckIfExistsAndReturn
-        (Guid id, bool asNoTracking = false)
+        (Guid id)
     {
-        UserEntity? userEntity;
-        
-        if (asNoTracking)
-        {
-            userEntity = await _dbContext
-                .Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Id == id);
-        }
-        else
-        {
-            userEntity = await _dbContext
-                .Users
-                .FirstOrDefaultAsync(u => u.Id == id);
-        }
+        var userEntity = await _dbContext
+            .Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Id == id);
 
         return (userEntity != null, userEntity);
     }
 
-    private async Task<(bool Exists, UserEntity? Entity)> CheckIfExistsAndReturn
-        (string email, bool asNoTracking = false)
+    private async Task<(bool Exists, UserEntity? Entity)> CheckIfExistsAndReturn(string email)
     {
-        UserEntity? userEntity;
-        
-        if (asNoTracking)
-        {
-            userEntity = await _dbContext
-                .Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Email == email);
-        }
-        else
-        {
-            userEntity = await _dbContext
-                .Users
-                .FirstOrDefaultAsync(u => u.Email == email);
-        }
+        var userEntity = await _dbContext
+            .Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Email == email);
 
         return (userEntity != null, userEntity);
     }
