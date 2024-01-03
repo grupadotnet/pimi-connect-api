@@ -21,12 +21,14 @@ public class UserService : IUserService
     
     public async Task<UserDto> GetUserAsync(Guid id)
     {
-        var checkResult = await CheckIfExistsAndReturn(id, asNoTracking: true);
+        #region Check and reject if doesn't exist
+        var checkResult = await CheckIfExistsAndReturn(id);
 
         if (!checkResult.Exists)
         {
             throw new NotFound404Exception("User", id.ToString());
         }
+        #endregion
 
         var userDto = _mapper.Map<UserDto>(checkResult.Entity);
         return userDto;
@@ -37,7 +39,8 @@ public class UserService : IUserService
         var userEntity = await _dbContext
             .Users
             .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Email.ToLower().Trim() == email.ToLower().Trim());
+            .FirstOrDefaultAsync(u => 
+                u.Email.ToLower().Trim() == email.ToLower().Trim());
 
         if (userEntity == null)
         {
@@ -63,12 +66,14 @@ public class UserService : IUserService
 
     public async Task<UserDto> UpdateUserAsync(UserDto userDto)
     {
+        #region Check and reject if doesn't exist
         var checkResult = await CheckIfExistsAndReturn(userDto.Id);
         
         if (!checkResult.Exists)
         {
             throw new NotFound404Exception("User", userDto.Id.ToString());
         }
+        #endregion
 
         var userEntityToUpdate = _mapper.Map<UserEntity>(userDto);
         
@@ -82,9 +87,7 @@ public class UserService : IUserService
     public async Task<UserDto> AddUserAsync(UserDto userDto)
     {
         #region Check and reject if already exists
-
-        var checkResultById = await CheckIfExistsAndReturn(
-            userDto.Id, asNoTracking: true);
+        var checkResultById = await CheckIfExistsAndReturn(userDto.Id);
         
         if (checkResultById.Exists)
         {
@@ -92,15 +95,13 @@ public class UserService : IUserService
                 $"User with id {userDto.Id} already exists.");
         }
         
-        var checkResultByEmail = await CheckIfExistsAndReturn(
-            userDto.Email, asNoTracking: true);
+        var checkResultByEmail = await CheckIfExistsAndReturn(userDto.Email);
         
         if (checkResultByEmail.Exists)
         {
             throw new BadRequest400Exception(
                 $"User with email {userDto.Email} already exists.");
         }
-
         #endregion
         
         var userEntityToAdd = _mapper.Map<UserEntity>(userDto);
@@ -114,57 +115,35 @@ public class UserService : IUserService
 
     public async Task DeleteUserAsync(Guid id)
     {
+        #region Check and reject if doesn't exist
         var checkResult = await CheckIfExistsAndReturn(id);
         
         if (!checkResult.Exists)
         {
             throw new NotFound404Exception("User", id.ToString());
         }
+        #endregion
 
         _dbContext.Users.Remove(checkResult.Entity);
         await _dbContext.SaveChangesAsync();
     }
 
-    private async Task<(bool Exists, UserEntity? Entity)> CheckIfExistsAndReturn
-        (Guid id, bool asNoTracking = false)
+    private async Task<(bool Exists, UserEntity? Entity)> CheckIfExistsAndReturn(Guid id)
     {
-        UserEntity? userEntity;
-        
-        if (asNoTracking)
-        {
-            userEntity = await _dbContext
-                .Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Id == id);
-        }
-        else
-        {
-            userEntity = await _dbContext
-                .Users
-                .FirstOrDefaultAsync(u => u.Id == id);
-        }
+        var userEntity = await _dbContext
+            .Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Id == id);
 
         return (userEntity != null, userEntity);
     }
 
-    private async Task<(bool Exists, UserEntity? Entity)> CheckIfExistsAndReturn
-        (string email, bool asNoTracking = false)
+    private async Task<(bool Exists, UserEntity? Entity)> CheckIfExistsAndReturn(string email)
     {
-        UserEntity? userEntity;
-        
-        if (asNoTracking)
-        {
-            userEntity = await _dbContext
-                .Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Email == email);
-        }
-        else
-        {
-            userEntity = await _dbContext
-                .Users
-                .FirstOrDefaultAsync(u => u.Email == email);
-        }
+        var userEntity = await _dbContext
+            .Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Email == email);
 
         return (userEntity != null, userEntity);
     }
