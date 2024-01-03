@@ -1,3 +1,4 @@
+using AutoMapper;
 using pimi_connect_app.Data.AppDbContext;
 using pimi_connect_app.Data.Entities;
 using pimi_connect_app.Data.Enums;
@@ -7,10 +8,12 @@ namespace pimi_connect_api.UnitTests.Shared;
 public class TestHelper
 {
     private readonly AppDbContext _testDbContext;
+    private readonly IMapper _mapper;
     
-    public TestHelper(AppDbContext testDbContext)
+    public TestHelper(AppDbContext testDbContext, IMapper mapper)
     {
         _testDbContext = testDbContext;
+        _mapper = mapper;
     }
 
     public async Task ResetDbContext()
@@ -19,34 +22,20 @@ public class TestHelper
         await _testDbContext.Database.EnsureCreatedAsync();
     }
 
-    public void TruncateTable(string tableName)
+    #region Fill tables
+    public async Task FillUsersTable(List<Guid> idsToAdd)
     {
-        _testDbContext.Database
-            .ExecuteSqlRaw($"TRUNCATE \"{tableName}\" CASCADE;");
-    }
-
-    #region Fill table methods
-
-    public async Task FillUsersTable(int entityCount)
-    {
-        for (var i = 0; i < entityCount; i++)
+        foreach (var id in idsToAdd)
         {
-            var newUser = new UserEntity()
-            {
-                UserName = GenerateUserName(i),
-                Email = GenerateEmail(i),
-                Status = UserStatus.Accessible,
-                ProfilePictureKey = GenerateGuid()
-            };
+            var newUser = GenerateUserEntity(id);
 
             await _testDbContext
                 .Users.AddAsync(newUser);
         }
-
+        
         await _testDbContext.SaveChangesAsync();
         _testDbContext.ChangeTracker.Clear();
     }
-
     #endregion
     
 }
