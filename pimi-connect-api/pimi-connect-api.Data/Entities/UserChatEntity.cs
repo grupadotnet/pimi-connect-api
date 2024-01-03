@@ -4,6 +4,7 @@ namespace pimi_connect_app.Data.Entities
 {
     public class UserChatEntity
     {
+        public Guid Id { get; set; }
         public string NickName { get; set; }
         public Guid UserId { get; set; }
         public Guid ChatId { get; set; }
