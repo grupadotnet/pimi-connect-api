@@ -19,6 +19,7 @@
 # Environment files
 *appsettings.json
 *appsettings.Development.json
+*appsettings.Tests.json
 
 ## End custom .gitignore
 
