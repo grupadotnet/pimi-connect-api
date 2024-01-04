@@ -2,7 +2,7 @@
 
 
 ## Project Description
-link to project diagram:
+Link to project diagram:
 https://www.figma.com/file/XQxeE5fQXhJE8QH4qGUTdu/PiMI-Connect?type=whiteboard&node-id=0-1&t=LbNPEUyWQQIx3t2h-0
 
 ## How to Install and Run?
@@ -56,7 +56,6 @@ cd pimi-connect-api/pimi-connect-api/pimi-connect-api.API/
     "pimi-connect-postgresql-test": "Host=localhost; Port=5432; Database=pimi-connect-test; Username=postgres; Password=password123"
   }
 }
-
 ```
 
 Change the `ConnectionStrings` according to your PostgreSQL configuration.
