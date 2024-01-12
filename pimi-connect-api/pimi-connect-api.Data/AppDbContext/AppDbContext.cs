@@ -9,6 +9,8 @@ public class AppDbContext : DbContext
     public DbSet<AuthEntity> AuthEntities { get; set; }
     public DbSet<UserChatEntity> UserChats { get; set; }
     public DbSet<AttachmentEntity> Attachments { get; set; }
+    public DbSet<ChatEntity> Chats { get; set; }
+    public DbSet<MessageEntity> Messages { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
     
@@ -18,8 +20,28 @@ public class AppDbContext : DbContext
         CreateAuthEntities(modelBuilder);
         CreateUserChats(modelBuilder);
         CreateAttachments(modelBuilder);
+        CreateChats(modelBuilder);
+        CreateMessages(modelBuilder);
     }
-    
+
+    private void CreateMessages(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<MessageEntity>(ef =>
+        {
+            ef.Property(u => u.Id)
+                .ValueGeneratedOnAdd();
+        });
+    }
+
+    private void CreateChats(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<ChatEntity>(ef =>
+        {
+            ef.Property(u => u.Id)
+                .ValueGeneratedOnAdd();
+        });
+    }
+
     private static void CreateUsers(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<UserEntity>(ef =>
@@ -56,8 +78,7 @@ public class AppDbContext : DbContext
     {
         modelBuilder.Entity<UserChatEntity>(ef =>
         {
-            ef.Property(u => u.Id)
-                .ValueGeneratedOnAdd();
+            ef.HasNoKey();
         });
     }
     

@@ -8,7 +8,7 @@
         public int g { get; set; } // prop name to change
         public Guid ThumbnailKey { get; set; }
         public List<MessageEntity>?  Messages { get; set; }
-        public List<UserChatEntity> Users { get; set; }
+        //public List<UserChatEntity>? Users { get; set; } //Unable to determine the relationship represented by navigation 'ChatEntity.Users' of type 'List<UserChatEntity>'
         public AttachmentEntity? Thumbnail { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using pimi_connect_api.Exceptions;
-using pimi_connect_api.Services.Interface;
+using pimi_connect_api.Services.Interfaces;
 using pimi_connect_app.Data.AppDbContext;
 using pimi_connect_app.Data.Entities;
 using pimi_connect_app.Data.Models;
