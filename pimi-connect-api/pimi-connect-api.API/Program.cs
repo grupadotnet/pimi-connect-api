@@ -1,21 +1,31 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using pimi_connect_api.Hubs;
 using pimi_connect_api.Middleware;
 using pimi_connect_api.Services;
 using pimi_connect_api.Services.Interfaces;
 using pimi_connect_app.Data.AppDbContext;
+using pimi_connect_app.Data.Models;
+using pimi_connect_app.Data.Models.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
 #region Inject Services
 
 builder.Services.AddControllers();
+builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+// Middleware
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 
+// Services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
+
+// Validators
+builder.Services.AddScoped<IValidator<UserDto>, UserDtoValidator>();
 
 builder.Services.AddSignalR();
 
@@ -31,7 +41,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("pimi-connect-postgresql"),
         b => b.MigrationsAssembly("pimi-connect-api.API"));
 });
-
 #endregion
 
 #endregion

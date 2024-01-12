@@ -24,7 +24,7 @@ public class AppDbContext : DbContext
         CreateMessages(modelBuilder);
     }
 
-    private void CreateMessages(ModelBuilder modelBuilder)
+    private static void CreateMessages(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<MessageEntity>(ef =>
         {
@@ -33,7 +33,7 @@ public class AppDbContext : DbContext
         });
     }
 
-    private void CreateChats(ModelBuilder modelBuilder)
+    private static void CreateChats(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ChatEntity>(ef =>
         {
