@@ -26,10 +26,10 @@ builder.Services.AddSwaggerGen();
 #region Add AppDbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+    //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+    //   b => b.MigrationsAssembly("pimi-connect-api.API"));
+        options.UseNpgsql(builder.Configuration.GetConnectionString("pimi-connect-postgresql"),
         b => b.MigrationsAssembly("pimi-connect-api.API"));
-    //options.UseNpgsql(builder.Configuration.GetConnectionString("pimi-connect-postgresql"),
-    //    b => b.MigrationsAssembly("pimi-connect-api.API"));
 
 });
 

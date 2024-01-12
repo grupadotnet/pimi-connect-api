@@ -8,9 +8,7 @@ namespace pimi_connect_api.Services.Interfaces
         Task<IEnumerable<MessageDto>> GetAllMessagesAsync();
         Task<IEnumerable<MessageDto>> GetMessagesByUserIdAsync();
         Task<IEnumerable<MessageDto>> GetMessagesByChatIdAsync();
-        Task<MessageDto> GetMessageAsync(int messageId);
+        Task<MessageDto> GetMessageAsync(Guid messageId);
         Task<MessageDto> AddMessageAsync(MessageDto messageDto);
-        bool MessageExistsAsync(int messageId);
-        bool Save();
     }
 }

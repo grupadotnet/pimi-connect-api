@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using pimi_connect_api.Exceptions;
 using pimi_connect_api.Services.Interfaces;
 using pimi_connect_app.Data.AppDbContext;
+using pimi_connect_app.Data.Entities;
 using pimi_connect_app.Data.Models;
 
 namespace pimi_connect_api.Services
@@ -21,16 +23,16 @@ namespace pimi_connect_api.Services
             throw new NotImplementedException();
         }
 
-        public Task<MessageDto> GetMessageAsync(int messageId)
+        public async Task<MessageDto> GetMessageAsync(Guid messageId)
         {
-            throw new NotImplementedException();
+            var messageDto = _mapper.Map<MessageDto>(await CheckIfExistsAndReturn(messageId));
+            return messageDto;
         }
 
         public async Task<IEnumerable<MessageDto>> GetAllMessagesAsync()
         {
             var messageEntities = await _dbContext
                .Messages
-               .AsNoTracking()
                .ToListAsync();
 
             var messageDtoList = _mapper.Map<List<MessageDto>>(messageEntities);
@@ -42,20 +44,33 @@ namespace pimi_connect_api.Services
             throw new NotImplementedException();
         }
 
-        public bool MessageExistsAsync(int messageId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Save()
-        {
-            var saved = _dbContext.SaveChanges();
-            return saved > 0 ? true : false;
-        }
-
         public Task<IEnumerable<MessageDto>> GetMessagesByChatIdAsync()
         {
             throw new NotImplementedException();
+        }
+        private async Task<MessageEntity?> CheckIfExistsAndReturn(Guid messageId)
+        {
+            if (!await MessageExists(messageId))
+            {
+                throw new NotFound404Exception("Not found message by given Id: ", messageId.ToString());
+            }
+            return await ReturnMessage(messageId);     
+        }
+
+        private async Task<bool> MessageExists(Guid messageId)
+        {
+            return await _dbContext.Messages.AnyAsync(m => m.Id == messageId);
+        }
+
+        private async Task<MessageEntity?> ReturnMessage(Guid messageId)
+        {
+            return await _dbContext.Messages.FirstOrDefaultAsync(m => m.Id == messageId);
+        }
+
+        private async Task<bool> Save()
+        {
+            var saved = await _dbContext.SaveChangesAsync();
+            return saved > 0 ? true : false;
         }
     }
 }
