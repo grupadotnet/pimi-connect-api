@@ -30,4 +30,8 @@
     <ProjectReference Include="..\pimi-connect-api.Data\pimi-connect-api.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

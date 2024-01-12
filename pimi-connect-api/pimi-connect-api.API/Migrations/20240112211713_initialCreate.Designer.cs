@@ -12,8 +12,8 @@ using pimi_connect_app.Data.AppDbContext;
 namespace pimi_connect_api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240112203154_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240112211713_initialCreate")]
+    partial class initialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
