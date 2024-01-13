@@ -31,6 +31,12 @@ public class AppDbContext : DbContext
             ef.Property(u => u.Id)
                 .ValueGeneratedOnAdd();
         });
+
+        modelBuilder.Entity<MessageEntity>()
+            .Property(u => u.Content);
+
+        modelBuilder.Entity<MessageEntity>()
+            .Property(u => u.CreatedDate);
     }
 
     private static void CreateChats(ModelBuilder modelBuilder)

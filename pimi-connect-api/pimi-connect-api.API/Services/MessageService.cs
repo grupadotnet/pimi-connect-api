@@ -18,9 +18,16 @@ namespace pimi_connect_api.Services
             _dbContext = dbContext;
             _mapper = mapper;
         }
-        public Task<MessageDto> AddMessageAsync(MessageDto messageDto)
+        public async Task<MessageDto> AddMessageAsync(MessageDto messageDto)
         {
-            throw new NotImplementedException();
+            var messageEntityToAdd = _mapper.Map<MessageEntity>(messageDto);
+           
+            await _dbContext.AddAsync(messageEntityToAdd);
+
+            if (!await Save())
+                throw new InternalServerError500Exception($"Something went wrong while saving");
+
+            return messageDto;
         }
 
         public async Task<MessageDto> GetMessageAsync(Guid messageId)
@@ -48,6 +55,20 @@ namespace pimi_connect_api.Services
         {
             throw new NotImplementedException();
         }
+
+        public async Task DeleteMessageAsync(Guid messageId)
+        {
+            var messageEntityToRemove = await CheckIfExistsAndReturn(messageId);
+
+            messageEntityToRemove.IsDeleted = true;
+            _dbContext.Messages.Update(messageEntityToRemove);
+
+            //_dbContext.Messages.Remove(messageEntityToRemove);
+            
+            if (!await Save())
+                throw new InternalServerError500Exception($"Something went wrong while saving");
+        }
+
         private async Task<MessageEntity?> CheckIfExistsAndReturn(Guid messageId)
         {
             if (!await MessageExists(messageId))
@@ -72,5 +93,7 @@ namespace pimi_connect_api.Services
             var saved = await _dbContext.SaveChangesAsync();
             return saved > 0 ? true : false;
         }
+
+        
     }
 }
