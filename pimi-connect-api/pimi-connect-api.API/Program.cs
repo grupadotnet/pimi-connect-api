@@ -23,6 +23,7 @@ builder.Services.AddScoped<ErrorHandlingMiddleware>();
 // Services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
+builder.Services.AddScoped<IChatService, ChatService>();
 
 // Validators
 builder.Services.AddScoped<IValidator<UserDto>, UserDtoValidator>();

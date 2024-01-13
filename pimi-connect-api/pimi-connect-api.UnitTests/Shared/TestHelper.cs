@@ -36,6 +36,20 @@ public class TestHelper
         await _testDbContext.SaveChangesAsync();
         _testDbContext.ChangeTracker.Clear();
     }
+
+    public async Task FillChatsTable(List<Guid> idsToAdd)
+    {
+        foreach (var id in idsToAdd)
+        {
+            var newChat = GenerateChatEntity(id);
+
+            await _testDbContext
+                .Chats.AddAsync(newChat);
+        }
+
+        await _testDbContext.SaveChangesAsync();
+        _testDbContext.ChangeTracker.Clear();
+    }
     #endregion
     
 }
