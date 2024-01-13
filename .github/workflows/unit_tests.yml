@@ -1,0 +1,72 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: UnitTests
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: password123
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        # We need to map port because we don't run separate container for dotnet build
+        ports:
+          - 5432:5432
+
+    defaults:
+      run:
+        working-directory: ./pimi-connect-api
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Setup EF Core
+        run: |
+          dotnet tool install --global dotnet-ef
+          dotnet tool restore
+
+      - name: Copy appsettings from root directory
+        # Ensure that working directory is project's root dir
+        working-directory: .
+        run: |
+          cp appsettings_example.json ./pimi-connect-api/pimi-connect-api.API/appsettings.json
+          cp appsettings_example.Tests.json ./pimi-connect-api/pimi-connect-api.API/appsettings.Tests.json
+
+      - name: Create database migrations
+        working-directory: ./pimi-connect-api/pimi-connect-api.API
+        run: |
+          dotnet ef database update 
+          dotnet ef database update --configuration Tests
+        env:
+          # The hostname used to communicate with the PostgreSQL service container
+          POSTGRES_HOST: postgres
+          # The default PostgreSQL port
+          POSTGRES_PORT: 5432
+          POSTGRES_PASSWORD: password123
+
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
