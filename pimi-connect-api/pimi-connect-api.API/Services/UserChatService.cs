@@ -60,7 +60,7 @@ public class UserChatService : IUserChatService
         
         var userChatEntityToAdd = _mapper.Map<UserChatEntity>(userChatDto);
         
-        var addedUserChatEntity = await _dbContext.AddAsync(userChatEntityToAdd);
+        var addedUserChatEntity = await _dbContext.UserChats.AddAsync(userChatEntityToAdd);
         await _dbContext.SaveChangesAsync();
 
         var addedUserChatDto = _mapper.Map<UserChatDto>(addedUserChatEntity.Entity);
