@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using pimi_connect_app.Data.AppDbContext;
@@ -11,9 +12,11 @@ using pimi_connect_app.Data.AppDbContext;
 namespace pimi_connect_api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240113130631_Migration2")]
+    partial class Migration2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,37 +24,6 @@ namespace pimi_connect_api.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("pimi_connect_app.Data.Entities.AttachmentEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Extension")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid?>("MessageEntityId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Path")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("publicName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MessageEntityId");
-
-                    b.ToTable("Attachments");
-                });
 
             modelBuilder.Entity("pimi_connect_app.Data.Entities.AuthEntity", b =>
                 {
@@ -117,6 +89,29 @@ namespace pimi_connect_api.Migrations
                     b.ToTable("ChatPasswords");
                 });
 
+            modelBuilder.Entity("pimi_connect_app.Data.Entities.ChatThumbnailEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("publicName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ChatThumbnails");
+                });
+
             modelBuilder.Entity("pimi_connect_app.Data.Entities.EmailEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -140,6 +135,34 @@ namespace pimi_connect_api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Emails");
+                });
+
+            modelBuilder.Entity("pimi_connect_app.Data.Entities.MessageAttachmentEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("MessageEntityId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("publicName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MessageEntityId");
+
+                    b.ToTable("MessageAttachments");
                 });
 
             modelBuilder.Entity("pimi_connect_app.Data.Entities.MessageEntity", b =>
@@ -190,6 +213,29 @@ namespace pimi_connect_api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PasswordContainers");
+                });
+
+            modelBuilder.Entity("pimi_connect_app.Data.Entities.ProfilePictureEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("publicName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProfilePictures");
                 });
 
             modelBuilder.Entity("pimi_connect_app.Data.Entities.UserChatEntity", b =>
@@ -277,22 +323,22 @@ namespace pimi_connect_api.Migrations
                     b.ToTable("UserKeys");
                 });
 
-            modelBuilder.Entity("pimi_connect_app.Data.Entities.AttachmentEntity", b =>
-                {
-                    b.HasOne("pimi_connect_app.Data.Entities.MessageEntity", null)
-                        .WithMany("Attachments")
-                        .HasForeignKey("MessageEntityId");
-                });
-
             modelBuilder.Entity("pimi_connect_app.Data.Entities.ChatEntity", b =>
                 {
-                    b.HasOne("pimi_connect_app.Data.Entities.AttachmentEntity", "Thumbnail")
+                    b.HasOne("pimi_connect_app.Data.Entities.ChatThumbnailEntity", "Thumbnail")
                         .WithMany()
                         .HasForeignKey("ThumbnailId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Thumbnail");
+                });
+
+            modelBuilder.Entity("pimi_connect_app.Data.Entities.MessageAttachmentEntity", b =>
+                {
+                    b.HasOne("pimi_connect_app.Data.Entities.MessageEntity", null)
+                        .WithMany("Attachments")
+                        .HasForeignKey("MessageEntityId");
                 });
 
             modelBuilder.Entity("pimi_connect_app.Data.Entities.MessageEntity", b =>
@@ -353,7 +399,7 @@ namespace pimi_connect_api.Migrations
                         .WithMany()
                         .HasForeignKey("AuthId");
 
-                    b.HasOne("pimi_connect_app.Data.Entities.AttachmentEntity", "ProfilePicture")
+                    b.HasOne("pimi_connect_app.Data.Entities.ProfilePictureEntity", "ProfilePicture")
                         .WithMany()
                         .HasForeignKey("ProfilePictureId")
                         .OnDelete(DeleteBehavior.Cascade)

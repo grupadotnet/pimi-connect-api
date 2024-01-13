@@ -8,6 +8,6 @@ public class UserDto
     public string UserName { get; set; }
     public string Email { get; set; }
     public UserStatus Status { get; set; }
-    public Guid ProfilePictureKey { get; set; }
+    public Guid ProfilePictureId { get; set; }
     public AttachmentDto? ProfilePicture { get; set; }
 }

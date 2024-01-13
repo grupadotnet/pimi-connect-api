@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using pimi_connect_app.Data.AppDbContext;
@@ -11,9 +12,11 @@ using pimi_connect_app.Data.AppDbContext;
 namespace pimi_connect_api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240113141149_Migration5")]
+    partial class Migration5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,7 +53,7 @@ namespace pimi_connect_api.Migrations
 
                     b.HasIndex("MessageEntityId");
 
-                    b.ToTable("Attachments");
+                    b.ToTable("AttachmentEntity");
                 });
 
             modelBuilder.Entity("pimi_connect_app.Data.Entities.AuthEntity", b =>

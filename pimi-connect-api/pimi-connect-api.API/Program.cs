@@ -22,6 +22,7 @@ builder.Services.AddScoped<ErrorHandlingMiddleware>();
 
 // Services
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAttachmentService, AttachmentService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 
 // Validators

@@ -5,7 +5,6 @@ namespace pimi_connect_api.UnitTests.Shared;
 public static class DataGenerator
 {
     #region Generate User related data
-
     public static string GenerateUserName(Guid id = new ())
     {
         return $"user{id}";
@@ -24,7 +23,7 @@ public static class DataGenerator
             UserName = GenerateUserName(id),
             Email = GenerateEmail(id),
             Status = UserStatus.Accessible,
-            ProfilePictureKey = Guid.NewGuid()
+            ProfilePictureId = id
         };
     }
     
@@ -34,8 +33,26 @@ public static class DataGenerator
 
         return mapper.Map<UserDto>(userEntity);
     }
-
     #endregion
     
+    #region Generate Attachment related data
+    public static AttachmentEntity GenerateAttachmentEntity(Guid id = new ())
+    {
+        return new AttachmentEntity
+        {
+            Id = id,
+            Type = AttachmentType.ProfilePicture,
+            Extension = ".jpg",
+            Path = "/some/path",
+            publicName = "publicName"
+        };
+    }
     
+    public static AttachmentDto GenerateAttachmentDto(IMapper mapper, Guid id = new ())
+    {
+        var attachmentEntity = GenerateAttachmentEntity(id);
+
+        return mapper.Map<AttachmentDto>(attachmentEntity);
+    }
+    #endregion
 }
