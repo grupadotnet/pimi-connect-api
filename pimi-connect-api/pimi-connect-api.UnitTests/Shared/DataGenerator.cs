@@ -24,7 +24,7 @@ public static class DataGenerator
             UserName = GenerateUserName(id),
             Email = GenerateEmail(id),
             Status = UserStatus.Accessible,
-            ProfilePictureKey = Guid.NewGuid()
+            ProfilePictureId = Guid.NewGuid()
         };
     }
     

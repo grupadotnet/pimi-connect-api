@@ -11,11 +11,8 @@ public class AppDbContext : DbContext
     public DbSet<ChatEntity> Chats { get; set; }
     public DbSet<MessageEntity> Messages { get; set; }
     public DbSet<ChatPasswordEntity> ChatPasswords { get; set; }
-    public DbSet<ChatThumbnailEntity> ChatThumbnails { get; set; }
     public DbSet<EmailEntity> Emails { get; set; }
-    public DbSet<MessageAttachmentEntity> MessageAttachments { get; set; }
     public DbSet<PasswordContainerEntity> PasswordContainers { get; set; }
-    public DbSet<ProfilePictureEntity> ProfilePictures { get; set; }
     public DbSet<UserKeyEntity> UserKeys { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
@@ -28,12 +25,10 @@ public class AppDbContext : DbContext
         CreateChats(modelBuilder);
         CreateMessages(modelBuilder);
         CreateChatPasswords(modelBuilder);
-        CreateChatThumbnails(modelBuilder);
         CreateEmails(modelBuilder);
-        CreateMessageAttachments(modelBuilder);
         CreatePasswordContainers(modelBuilder);
-        CreateProfilePictures(modelBuilder);
         CreateUserKeys(modelBuilder);
+        CreateAttachments(modelBuilder);
     }
 
     private static void CreateMessages(ModelBuilder modelBuilder)
@@ -79,7 +74,7 @@ public class AppDbContext : DbContext
     
     private static void CreateAuths(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<UserEntity>(ef =>
+        modelBuilder.Entity<AuthEntity>(ef =>
         {
             ef.Property(u => u.Id)
                 .ValueGeneratedOnAdd();
@@ -100,25 +95,9 @@ public class AppDbContext : DbContext
             ef.HasNoKey();
         });
     }
-    private static void CreateChatThumbnails(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<ChatThumbnailEntity>(ef =>
-        {
-            ef.Property(u => u.Id)
-                .ValueGeneratedOnAdd();
-        });
-    }
     private static void CreateEmails(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<EmailEntity>(ef =>
-        {
-            ef.Property(u => u.Id)
-                .ValueGeneratedOnAdd();
-        });
-    }
-    private static void CreateMessageAttachments(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<MessageAttachmentEntity>(ef =>
         {
             ef.Property(u => u.Id)
                 .ValueGeneratedOnAdd();
@@ -132,17 +111,17 @@ public class AppDbContext : DbContext
                 .ValueGeneratedOnAdd();
         });
     }
-    private static void CreateProfilePictures(ModelBuilder modelBuilder)
+    private static void CreateUserKeys(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<ProfilePictureEntity>(ef =>
+        modelBuilder.Entity<UserKeyEntity>(ef =>
         {
             ef.Property(u => u.Id)
                 .ValueGeneratedOnAdd();
         });
     }
-    private static void CreateUserKeys(ModelBuilder modelBuilder)
+    private static void CreateAttachments(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<UserKeyEntity>(ef =>
+        modelBuilder.Entity<AttachmentEntity>(ef =>
         {
             ef.Property(u => u.Id)
                 .ValueGeneratedOnAdd();

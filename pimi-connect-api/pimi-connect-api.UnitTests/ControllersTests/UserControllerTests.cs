@@ -156,7 +156,7 @@ public class UserControllerTests : ControllerUnitTestsBase<UserDto>
             UserName = GenerateUserName(),
             Email = GenerateEmail(emailAlreadyExists ? ExistingId : NotExistingId),
             Status = UserStatus.Accessible,
-            ProfilePictureKey = Guid.NewGuid()
+            ProfilePictureId = Guid.NewGuid()
         };
         
         // Act && Assert

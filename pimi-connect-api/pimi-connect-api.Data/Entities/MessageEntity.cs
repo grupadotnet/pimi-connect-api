@@ -11,7 +11,7 @@
         public Guid PasswordContainerId { get; set; }
         public ChatEntity Chat { get; set; }
         public UserEntity UserCreated { get; set; }
-        public List<MessageAttachmentEntity>? Attachments { get; set; }
+        public List<AttachmentEntity>? Attachments { get; set; }
         public PasswordContainerEntity PasswordContainer { get; set; }
     }
 }

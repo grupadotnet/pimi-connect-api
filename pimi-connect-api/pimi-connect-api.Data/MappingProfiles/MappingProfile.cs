@@ -12,5 +12,6 @@ public class MappingProfile : Profile
         CreateMap<UserChatEntity, UserChatDto>().ReverseMap();
         CreateMap<ChatEntity, ChatDto>().ReverseMap();
         CreateMap<MessageEntity, MessageDto>().ReverseMap();
+        CreateMap<AttachmentEntity, AttachmentDto>().ReverseMap();
     }
 }
