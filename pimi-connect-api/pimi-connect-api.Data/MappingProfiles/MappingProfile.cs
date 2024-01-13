@@ -10,8 +10,8 @@ public class MappingProfile : Profile
     {
         CreateMap<UserEntity, UserDto>().ReverseMap();
         CreateMap<UserChatEntity, UserChatDto>().ReverseMap();
-        CreateMap<AttachmentEntity, AttachmentDto>().ReverseMap();
         CreateMap<ChatEntity, ChatDto>().ReverseMap();
         CreateMap<MessageEntity, MessageDto>().ReverseMap();
+        CreateMap<AttachmentEntity, AttachmentDto>().ReverseMap();
     }
 }

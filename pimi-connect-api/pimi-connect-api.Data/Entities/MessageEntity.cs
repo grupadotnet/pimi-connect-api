@@ -8,9 +8,10 @@
         public Guid ChatId { get; set; }
         public Guid UserCreatedId {  get; set; }
         public Guid AttachmentId { get; set; }
-        public Guid IdPasswordContainer { get; set; }
-        public UserEntity UserCreated { get; set; }
+        public Guid PasswordContainerId { get; set; }
         public ChatEntity Chat { get; set; }
+        public UserEntity UserCreated { get; set; }
         public List<AttachmentEntity>? Attachments { get; set; }
+        public PasswordContainerEntity PasswordContainer { get; set; }
     }
 }
