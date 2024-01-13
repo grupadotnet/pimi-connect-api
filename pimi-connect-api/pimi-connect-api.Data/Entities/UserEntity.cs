@@ -9,9 +9,10 @@ namespace pimi_connect_app.Data.Entities
         public string UserName { get; set; }
         public string Email { get; set; }
         public UserStatus Status { get; set; }
-        public Guid ProfilePictureKey { get; set; }
+        public Guid ProfilePictureId { get; set; }
         public AuthEntity? Auth { get; set; }
-        public AttachmentEntity? ProfilePicture { get; set; }
+        public ProfilePictureEntity? ProfilePicture { get; set; }
         //public List<UserChatEntity>? UserChats { get; set; } // Unable to determine the relationship represented by navigation 'UserEntity.UserChats' of type 'List<UserChatEntity>'
+        public List<MessageEntity>? Messages { get; set; }
     }
 }
