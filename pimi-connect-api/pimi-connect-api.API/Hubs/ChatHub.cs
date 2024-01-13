@@ -30,7 +30,7 @@ namespace pimi_connect_api.Hubs
         //     return base.OnDisconnectedAsync(exception);
         // }
 
-        public async Task JoinChat(UserConnection conn)
+        public async Task JoinChat(UserConnectionDto conn)
         {
             TotalUsers++;
             await Clients.All
@@ -38,7 +38,7 @@ namespace pimi_connect_api.Hubs
                     $"{conn.UserName} has joined!");
         }
 
-        public async Task JoinSpecificChatRoom(UserConnection conn)
+        public async Task JoinSpecificChatRoom(UserConnectionDto conn)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, conn.ChatRoom);
             
