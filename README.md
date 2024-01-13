@@ -1,5 +1,5 @@
 # pimi-connect-api
-
+[![UnitTests](https://github.com/grupadotnet/pimi-connect-api/actions/workflows/unit_tests.yml/badge.svg)](https://github.com/grupadotnet/pimi-connect-api/actions/workflows/unit_tests.yml)
 
 ## Project Description
 Link to project diagram:
@@ -56,6 +56,13 @@ cd pimi-connect-api/pimi-connect-api/pimi-connect-api.API/
     "pimi-connect-postgresql-test": "Host=localhost; Port=5432; Database=pimi-connect-test; Username=postgres; Password=password123"
   }
 }
+```
+
+You can also copy example files from root directory to ./pimi-connect-api/pimi-connect-api.API
+- In project's root directory run:
+```bash
+cp appsettings_example.json ./pimi-connect-api/pimi-connect-api.API/appsettings.json
+cp appsettings_example.Tests.json ./pimi-connect-api/pimi-connect-api.API/appsettings.Tests.json
 ```
 
 Change the `ConnectionStrings` according to your PostgreSQL configuration.
