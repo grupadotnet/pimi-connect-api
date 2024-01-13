@@ -24,18 +24,24 @@ namespace pimi_connect_api.Services
         {
             var checkResult = await CheckIfExistsAndReturn(id);
 
-            if(!checkResult.Exists);
+            if(!checkResult.Exists)
             {
                 throw new NotFound404Exception("Chat", id.ToString());
             }
 
-            var chatDto = _mapper.Map<ChatDto>(checkResult.Entity);
+            ChatDto chatDto = _mapper.Map<ChatDto>(checkResult.Entity);
             return chatDto;
         }
 
-        public Task<IEnumerable<ChatDto>> GetAllChatsAsync()
+        public async Task<IEnumerable<ChatDto>> GetAllChatsAsync()
         {
-            throw new NotImplementedException();
+            var chatEntities = _dbContext
+                .Chats
+                .AsNoTracking()
+                .ToListAsync();
+
+            var chatDtoList = _mapper.Map<IEnumerable<ChatDto>>(chatEntities);
+            return chatDtoList;
         }
 
         public Task<ChatDto> AddChatAsync(ChatDto chatDto)
