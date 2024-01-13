@@ -78,7 +78,8 @@ public class AppDbContext : DbContext
     {
         modelBuilder.Entity<UserChatEntity>(ef =>
         {
-            ef.HasNoKey();
+            ef.Property(u => u.Id)
+                .ValueGeneratedOnAdd();
         });
     }
     
