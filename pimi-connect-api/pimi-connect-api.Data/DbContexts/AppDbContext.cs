@@ -7,6 +7,7 @@ public class AppDbContext : DbContext
 {
     public DbSet<UserEntity> Users { get; set; }
     public DbSet<AuthEntity> Auths { get; set; }
+    public DbSet<AttachmentEntity> Attachments { get; set; }
     public DbSet<UserChatEntity> UserChats { get; set; }
     public DbSet<ChatEntity> Chats { get; set; }
     public DbSet<MessageEntity> Messages { get; set; }
@@ -21,6 +22,7 @@ public class AppDbContext : DbContext
     {
         CreateUsers(modelBuilder);
         CreateAuths(modelBuilder);
+        CreateAttachments(modelBuilder);
         CreateUserChats(modelBuilder);
         CreateChats(modelBuilder);
         CreateMessages(modelBuilder);
