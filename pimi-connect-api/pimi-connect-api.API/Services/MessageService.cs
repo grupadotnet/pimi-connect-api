@@ -46,12 +46,16 @@ namespace pimi_connect_api.Services
             return messageDtoList;
         }
 
-        public Task<IEnumerable<MessageDto>> GetMessagesByUserIdAsync()
+        public async Task<IEnumerable<MessageDto>> GetMessagesByUserIdAsync(Guid userId)
         {
-            throw new NotImplementedException();
+            var messageEntities = await _dbContext
+               .Messages.Where(m => m.UserCreatedId == userId).ToListAsync();
+
+            var messageDtoList = _mapper.Map<List<MessageDto>>(messageEntities);
+            return messageDtoList;
         }
 
-        public Task<IEnumerable<MessageDto>> GetMessagesByChatIdAsync()
+        public Task<IEnumerable<MessageDto>> GetMessagesByChatIdAsync(Guid chatId)
         {
             throw new NotImplementedException();
         }

@@ -23,6 +23,13 @@ namespace pimi_connect_api.Controllers
             return StatusCode(StatusCodes.Status200OK, messageDtoList);
         }
         [HttpGet]
+        [Route("GetByUserIdAsync")]
+        public async Task<IActionResult> GetByUserIdAsync(Guid id)
+        {
+            var messageDtoList = await _messageService.GetMessagesByUserIdAsync(id);
+            return StatusCode(StatusCodes.Status200OK, messageDtoList);
+        }
+        [HttpGet]
         [Route("GetAsync")]
         public async Task<IActionResult> GetAsync(Guid id)
         {
