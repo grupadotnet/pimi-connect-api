@@ -12,7 +12,6 @@ using pimi_connect_app.Data.Models.Validators;
 var builder = WebApplication.CreateBuilder(args);
 
 #region Inject Services
-
 builder.Services.AddControllers();
 builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -42,13 +41,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         b => b.MigrationsAssembly("pimi-connect-api.API"));
 });
 #endregion
-
 #endregion
 
 var app = builder.Build();
 
 #region Configure the HTTP request pipeline.
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -63,8 +60,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapHub<UserHub>("/hubs/user");
+app.MapHub<ChatHub>("/chat");
 
 app.Run();
-
 #endregion
