@@ -44,19 +44,53 @@ namespace pimi_connect_api.Services
             return chatDtoList;
         }
 
-        public Task<ChatDto> AddChatAsync(ChatDto chatDto)
+        public async Task<ChatDto> AddChatAsync(ChatDto chatDto)
         {
-            throw new NotImplementedException();
+            var checkResult = await CheckIfExistsAndReturn(chatDto.Id);
+
+            if(!checkResult.Exists)
+            {
+                throw new BadRequest400Exception($"Chat with id {chatDto.Id} already exists.");
+            }
+
+            ChatEntity chatEntityToAdd = _mapper.Map<ChatEntity>(chatDto);
+
+            var addedChatEntity = await _dbContext.AddAsync(chatEntityToAdd);
+            await _dbContext.SaveChangesAsync();
+
+            var addedChatDto = _mapper.Map<ChatDto>(addedChatEntity);
+            return addedChatDto;
         }
 
-        public Task DeleteChatAsync(Guid id)
+        public async Task DeleteChatAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var checkResult = await CheckIfExistsAndReturn(id);
+
+            if(!checkResult.Exists)
+            {
+                throw new NotFound404Exception("Chat", id.ToString());
+            }
+
+            _dbContext.Chats.Remove(checkResult.Entity);
+            await _dbContext.SaveChangesAsync();
         }
 
-        public Task<ChatDto> UpdateChatAsync(ChatDto chatDto)
+        public async Task<ChatDto> UpdateChatAsync(ChatDto chatDto)
         {
-            throw new NotImplementedException();
+            var checkResult = await CheckIfExistsAndReturn(chatDto.Id);
+
+            if(!checkResult.Exists)
+            {
+                throw new NotFound404Exception("Chat", chatDto.Id.ToString());
+            }
+
+            ChatEntity chatEntityToUpdate = _mapper.Map<ChatEntity>(chatDto);
+
+            var updatedChatEntity = _dbContext.Update(chatEntityToUpdate);
+            await _dbContext.SaveChangesAsync();
+
+            var updatedChatDto = _mapper.Map<ChatDto>(updatedChatEntity.Entity);
+            return updatedChatDto;
         }
         #endregion
 
