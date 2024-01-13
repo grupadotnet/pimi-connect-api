@@ -35,7 +35,7 @@ namespace pimi_connect_api.Services
 
         public async Task<IEnumerable<ChatDto>> GetAllChatsAsync()
         {
-            var chatEntities = _dbContext
+            var chatEntities = await _dbContext
                 .Chats
                 .AsNoTracking()
                 .ToListAsync();
@@ -48,7 +48,7 @@ namespace pimi_connect_api.Services
         {
             var checkResult = await CheckIfExistsAndReturn(chatDto.Id);
 
-            if(!checkResult.Exists)
+            if(checkResult.Exists)
             {
                 throw new BadRequest400Exception($"Chat with id {chatDto.Id} already exists.");
             }
@@ -58,7 +58,7 @@ namespace pimi_connect_api.Services
             var addedChatEntity = await _dbContext.AddAsync(chatEntityToAdd);
             await _dbContext.SaveChangesAsync();
 
-            var addedChatDto = _mapper.Map<ChatDto>(addedChatEntity);
+            var addedChatDto = _mapper.Map<ChatDto>(addedChatEntity.Entity);
             return addedChatDto;
         }
 
@@ -98,9 +98,9 @@ namespace pimi_connect_api.Services
 
         private async Task<(bool Exists, ChatEntity? Entity)> CheckIfExistsAndReturn(Guid id)
         {
+            ;
             var chatEntity = await _dbContext
                 .Chats
-                .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             return (chatEntity != null, chatEntity);
