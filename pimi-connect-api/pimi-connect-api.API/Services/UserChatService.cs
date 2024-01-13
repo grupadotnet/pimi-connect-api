@@ -49,7 +49,7 @@ public class UserChatService : IUserChatService
     {
         #region Check and reject if already exists
         
-        var checkResultById = await CheckIfExistsAndReturn(userChatDto.ChatId); //TODO: userChatDto should have changed ID
+        var checkResultById = await CheckIfExistsAndReturn(userChatDto.ChatId); //TODO: change ChatId to dedicated Id
         
         if (checkResultById.Exists)
         {
@@ -85,7 +85,7 @@ public class UserChatService : IUserChatService
     public async Task<UserChatDto> UpdateUserChatAsync(UserChatDto userChatDto)
     {
         #region Check and reject if doesn't exist
-        var checkResult = await CheckIfExistsAndReturn(userChatDto.ChatId);
+        var checkResult = await CheckIfExistsAndReturn(userChatDto.ChatId); //TODO: change ChatId to dedicated Id
         
         if (!checkResult.Exists)
         {
