@@ -54,7 +54,12 @@ cd pimi-connect-api/pimi-connect-api/pimi-connect-api.API/
 {
   "ConnectionStrings": {
     "pimi-connect-postgresql-test": "Host=localhost; Port=5432; Database=pimi-connect-test; Username=postgres; Password=password123"
-  }
+  },
+  "TestSettings": {
+    "EntitiesCount": 6,
+    "ConnectionStringName": "pimi-connect-postgresql-test",
+    "MigrationsAssemblyName": "pimi-connect-api.API"
+  } 
 }
 ```
 

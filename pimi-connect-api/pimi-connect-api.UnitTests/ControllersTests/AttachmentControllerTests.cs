@@ -64,7 +64,7 @@ public class AttachmentControllerTests : ControllerUnitTestsBase<AttachmentDto>
         
         if (hasAttachmentsInDb)
         {
-            Assert.Equal(EntitiesCount, resultTuple.List.Count);
+            Assert.Equal(Settings.EntitiesCount, resultTuple.List.Count);
         }
         else
         {
