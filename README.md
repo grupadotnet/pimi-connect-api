@@ -67,7 +67,7 @@ cp appsettings_example.Tests.json ./pimi-connect-api/pimi-connect-api.API/appset
 
 Change the `ConnectionStrings` according to your PostgreSQL configuration.
 
-- Create databases:
+- Create databases (`/pimi-connect-api/pimi-connect-api.API`):
 
 ```bash
 dotnet ef database update 
