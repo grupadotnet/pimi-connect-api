@@ -94,7 +94,7 @@ public class UserControllerTests : ControllerUnitTestsBase<UserDto>
         
         if (hasUsersInDb)
         {
-            Assert.Equal(EntitiesCount, resultTuple.List.Count);
+            Assert.Equal(Settings.EntitiesCount, resultTuple.List.Count);
         }
         else
         {
