@@ -46,7 +46,7 @@ public class TestHelper
             await _testDbContext
                 .Messages.AddAsync(newMessage);
         }
-
+    }
 
     
     public async Task FillAttachmentsTable(List<Guid> idsToAdd)
