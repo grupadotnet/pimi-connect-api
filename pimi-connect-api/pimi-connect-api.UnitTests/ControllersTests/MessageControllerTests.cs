@@ -61,7 +61,7 @@ namespace pimi_connect_api.UnitTests.ControllersTests
 
             if (hasMessagesInDb)
             {
-                Assert.Equal(EntitiesCount, resultTuple.List.Count);
+                Assert.Equal(Settings.EntitiesCount, resultTuple.List.Count);
             }
             else
             {

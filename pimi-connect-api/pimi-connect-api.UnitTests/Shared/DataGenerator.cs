@@ -57,7 +57,7 @@ public static class DataGenerator
             IsDeleted = false,
             UserCreatedId = Guid.NewGuid(),
             AttachmentId = Guid.NewGuid(),
-            IdPasswordContainer = Guid.NewGuid()
+            PasswordContainerId = Guid.NewGuid()
         };
     }
 
