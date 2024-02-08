@@ -36,6 +36,19 @@ public class TestHelper
         await _testDbContext.SaveChangesAsync();
         _testDbContext.ChangeTracker.Clear();
     }
+    public async Task FillMessagesTable(List<Guid> idsToAdd)
+    {
+        foreach (var id in idsToAdd)
+        {
+            var newMessage = GenerateMessageEntity(id);
+
+            await _testDbContext
+                .Messages.AddAsync(newMessage);
+        }
+
+        await _testDbContext.SaveChangesAsync();
+        _testDbContext.ChangeTracker.Clear();
+    }
     #endregion
-    
+
 }
