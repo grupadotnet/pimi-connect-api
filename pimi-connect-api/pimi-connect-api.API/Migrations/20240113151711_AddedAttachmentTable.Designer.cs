@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using pimi_connect_app.Data.AppDbContext;
@@ -11,9 +12,11 @@ using pimi_connect_app.Data.AppDbContext;
 namespace pimi_connect_api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240113151711_AddedAttachmentTable")]
+    partial class AddedAttachmentTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -151,10 +154,11 @@ namespace pimi_connect_api.Migrations
                     b.Property<Guid>("AttachmentId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("ChatEntityId")
+                    b.Property<Guid>("ChatId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Content")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedDate")
@@ -163,15 +167,12 @@ namespace pimi_connect_api.Migrations
                     b.Property<Guid>("PasswordContainerId")
                         .HasColumnType("uuid");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
                     b.Property<Guid>("UserCreatedId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChatEntityId");
+                    b.HasIndex("ChatId");
 
                     b.HasIndex("PasswordContainerId");
 
@@ -299,9 +300,11 @@ namespace pimi_connect_api.Migrations
 
             modelBuilder.Entity("pimi_connect_app.Data.Entities.MessageEntity", b =>
                 {
-                    b.HasOne("pimi_connect_app.Data.Entities.ChatEntity", null)
+                    b.HasOne("pimi_connect_app.Data.Entities.ChatEntity", "Chat")
                         .WithMany("Messages")
-                        .HasForeignKey("ChatEntityId");
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("pimi_connect_app.Data.Entities.PasswordContainerEntity", "PasswordContainer")
                         .WithMany()

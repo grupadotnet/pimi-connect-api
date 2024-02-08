@@ -8,7 +8,7 @@ https://www.figma.com/file/XQxeE5fQXhJE8QH4qGUTdu/PiMI-Connect?type=whiteboard&n
 ## How to Install and Run?
 
 ### Install:
-- Download and install [**.NET 8**](https://dotnet.microsoft.com/en-us/download/dotnet/8.0),
+- Download and install [**.NET 8**](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) (take a note that if you are using Visual Studio, then it has to be in version 2022, otherwise .net sdk might not work properly),
 - Install [**Entity Framework Core**](https://learn.microsoft.com/en-us/ef/core/cli/dotnet),
 - Download and install [**PostgreSQL**](https://www.postgresql.org/download/).
 
@@ -54,7 +54,12 @@ cd pimi-connect-api/pimi-connect-api/pimi-connect-api.API/
 {
   "ConnectionStrings": {
     "pimi-connect-postgresql-test": "Host=localhost; Port=5432; Database=pimi-connect-test; Username=postgres; Password=password123"
-  }
+  },
+  "TestSettings": {
+    "EntitiesCount": 6,
+    "ConnectionStringName": "pimi-connect-postgresql-test",
+    "MigrationsAssemblyName": "pimi-connect-api.API"
+  } 
 }
 ```
 
@@ -67,7 +72,7 @@ cp appsettings_example.Tests.json ./pimi-connect-api/pimi-connect-api.API/appset
 
 Change the `ConnectionStrings` according to your PostgreSQL configuration.
 
-- Create databases:
+- Create databases (`/pimi-connect-api/pimi-connect-api.API`):
 
 ```bash
 dotnet ef database update 

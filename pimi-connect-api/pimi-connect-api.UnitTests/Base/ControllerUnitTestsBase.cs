@@ -6,11 +6,12 @@ using pimi_connect_app.Data.MappingProfiles;
 
 namespace pimi_connect_api.UnitTests.Base;
 
-public abstract class ControllerUnitTestsBase<TDtoType>: TestSettings  where TDtoType : class
+public abstract class ControllerUnitTestsBase<TDtoType>  where TDtoType : class
 {
     #region Properties
     protected AppDbContext TestDbContext { get; private set; }
     protected IConfiguration Configuration { get; private set; }
+    protected TestSettings Settings { get; private set; }
     protected IMapper Mapper { get; private set; }
     protected TestHelper Helper { get; }
     protected List<Guid> ExistingIds { get; private set; }
@@ -21,6 +22,7 @@ public abstract class ControllerUnitTestsBase<TDtoType>: TestSettings  where TDt
     protected ControllerUnitTestsBase()
     {
         SetupConfiguration();
+        SetupSettings();
         SetupMapper();
         SetupTestDbContext();
         
@@ -79,10 +81,24 @@ public abstract class ControllerUnitTestsBase<TDtoType>: TestSettings  where TDt
     private void SetupConfiguration()
     {
         var configuration = new ConfigurationBuilder()
-            .AddJsonFile(ConfigurationFileName)
+            .AddJsonFile("appsettings.Tests.json")
             .Build();
 
         Configuration = configuration;
+
+        
+    }
+
+    private void SetupSettings()
+    {
+        Settings = new TestSettings();
+        Configuration.GetSection("TestSettings")
+            .Bind(Settings, c => c.BindNonPublicProperties = true);
+
+        if (Settings == null)
+        {
+            throw new InvalidOperationException("Could not get TestSettings correctly.");
+        }
     }
     
     private void SetupMapper()
@@ -99,8 +115,8 @@ public abstract class ControllerUnitTestsBase<TDtoType>: TestSettings  where TDt
     {
         var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
         
-        optionsBuilder.UseNpgsql(Configuration.GetConnectionString(ConnectionStringName), 
-            b => b.MigrationsAssembly(MigrationsAssemblyName));
+        optionsBuilder.UseNpgsql(Configuration.GetConnectionString(Settings.ConnectionStringName), 
+            b => b.MigrationsAssembly(Settings.MigrationsAssemblyName));
 
         TestDbContext = new AppDbContext(optionsBuilder.Options);
     }
@@ -119,7 +135,7 @@ public abstract class ControllerUnitTestsBase<TDtoType>: TestSettings  where TDt
     {
         ExistingIds = new List<Guid>();
         
-        for (var i = 0; i < EntitiesCount; i++)
+        for (var i = 0; i < Settings.EntitiesCount; i++)
         {
             ExistingIds.Add(Guid.NewGuid());
         }

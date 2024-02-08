@@ -36,6 +36,7 @@ public class TestHelper
         await _testDbContext.SaveChangesAsync();
         _testDbContext.ChangeTracker.Clear();
     }
+
     public async Task FillMessagesTable(List<Guid> idsToAdd)
     {
         foreach (var id in idsToAdd)
@@ -45,6 +46,19 @@ public class TestHelper
             await _testDbContext
                 .Messages.AddAsync(newMessage);
         }
+
+
+    
+    public async Task FillAttachmentsTable(List<Guid> idsToAdd)
+    {
+        foreach (var id in idsToAdd)
+        {
+            var newAttachment = GenerateAttachmentEntity(id);
+
+            await _testDbContext
+                .Attachments.AddAsync(newAttachment);
+        }
+        
 
         await _testDbContext.SaveChangesAsync();
         _testDbContext.ChangeTracker.Clear();

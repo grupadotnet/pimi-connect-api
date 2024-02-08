@@ -4,6 +4,7 @@ using pimi_connect_api.UnitTests.Base;
 
 namespace pimi_connect_api.UnitTests.ControllersTests;
 
+[Collection("TestsWhichUseDatabase_pimi-connect-test")]
 public class UserControllerTests : ControllerUnitTestsBase<UserDto>
 {
     private UserController _userController;
@@ -14,6 +15,7 @@ public class UserControllerTests : ControllerUnitTestsBase<UserDto>
 
         if (fillDb)
         {
+            await Helper.FillAttachmentsTable(ExistingIds);
             await Helper.FillUsersTable(ExistingIds);
         }
         
@@ -92,7 +94,7 @@ public class UserControllerTests : ControllerUnitTestsBase<UserDto>
         
         if (hasUsersInDb)
         {
-            Assert.Equal(EntitiesCount, resultTuple.List.Count);
+            Assert.Equal(Settings.EntitiesCount, resultTuple.List.Count);
         }
         else
         {
@@ -156,7 +158,7 @@ public class UserControllerTests : ControllerUnitTestsBase<UserDto>
             UserName = GenerateUserName(),
             Email = GenerateEmail(emailAlreadyExists ? ExistingId : NotExistingId),
             Status = UserStatus.Accessible,
-            ProfilePictureKey = Guid.NewGuid()
+            ProfilePictureId = ExistingId
         };
         
         // Act && Assert
