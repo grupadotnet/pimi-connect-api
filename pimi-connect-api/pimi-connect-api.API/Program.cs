@@ -44,6 +44,19 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 #endregion
 #endregion
 
+#region Add Cors
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy("react-front-for-development", builder =>
+    {
+        builder.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+#endregion
+
 var app = builder.Build();
 
 #region Configure the HTTP request pipeline.
@@ -62,6 +75,8 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapHub<ChatHub>("/chat");
+
+app.UseCors("react-front-for-development");
 
 app.Run();
 #endregion
