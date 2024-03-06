@@ -1,15 +1,17 @@
 import React, {useState} from "react";
-import {Button, Col, Container, Form, Row} from "react-bootstrap";
-import {Header} from "../Header/Header";
+import {Button, Col, Form, Row} from "react-bootstrap";
 import {WaitingRoomForm} from "./WaitingRoomForm";
+import {useJoinChatRoom} from "../hooks/useJoinChatRoom";
+
 
 export function WaitingRoom() {
     const [username, setUsername] = useState<string>();
-    const [chatId, setChatId] = useState<string>();
+    const [chatroom, setChatroom] = useState<string>();
+    const {joinChatroom} = useJoinChatRoom();
 
     const onSubmit = (e: any) => {
         e.preventDefault();
-        //joinChat(username, chatId);
+        joinChatroom(username, chatroom);
     };
 
     return (
@@ -18,11 +20,10 @@ export function WaitingRoom() {
                 <Col sm={12}>
                     <WaitingRoomForm
                         setUsername={setUsername}
-                        setChatId={setChatId}
+                        setChatroom={setChatroom}
                     />
                 </Col>
                 <Col sm={12}>
-                    <hr/>
                     <Button variant="success" type="submit">Join</Button>
                 </Col>
             </Row>
