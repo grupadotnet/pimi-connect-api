@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {Button, Col, Form, Row} from "react-bootstrap";
 import {WaitingRoomForm} from "./WaitingRoomForm";
-import {useJoinChatRoom} from "../hooks/useJoinChatRoom";
+import {useJoinChatRoom} from "../../hooks/useJoinChatRoom";
 
 
 export function WaitingRoom() {
