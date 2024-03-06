@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using pimi_connect_app.Data.AppDbContext;
-using pimi_connect_app.Data.Models;
 using pimi_connect_app.Data.Models.ConnectionModels;
 
 namespace pimi_connect_api.Hubs
@@ -34,17 +33,15 @@ namespace pimi_connect_api.Hubs
         {
             TotalUsers++;
             await Clients.All
-                .SendAsync("ReceiveMessage", "admin", 
-                    $"{conn.UserName} has joined!");
+                .SendAsync("ReceiveMessage", "admin", $"{conn.Username} has joined!");
         }
 
-        public async Task JoinSpecificChatRoom(UserConnectionDto conn)
+        public async Task JoinSpecificChatroom(UserConnectionDto conn)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, conn.ChatRoom);
+            await Groups.AddToGroupAsync(Context.ConnectionId, conn.Chatroom);
             
-            await Clients.Group(conn.ChatRoom)
-                .SendAsync("ReceiveMessage", "admin", 
-                    $"{conn.UserName} has joined {conn.ChatRoom}");
+            await Clients.Group(conn.Chatroom)
+                .SendAsync("ReceiveMessage", "admin", $"{conn.Username} has joined {conn.Chatroom}");
         }
 
         // public async Task SendMessage(string msg)
