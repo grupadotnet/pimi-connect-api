@@ -23,11 +23,11 @@ public class TestHelper
     }
 
     #region Fill tables
-    public async Task FillUsersTable(List<Guid> idsToAdd)
+    public async Task FillUsersTable(List<Guid> idsToAdd, List<string> domainsToAdd)
     {
-        foreach (var id in idsToAdd)
+        for(int i = 0; i < idsToAdd.Count; i++)
         {
-            var newUser = GenerateUserEntity(id);
+            var newUser = GenerateUserEntity(domainsToAdd[i], idsToAdd[i]);
 
             await _testDbContext
                 .Users.AddAsync(newUser);

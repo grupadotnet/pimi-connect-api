@@ -8,15 +8,106 @@ namespace pimi_connect_api.UnitTests.ControllersTests;
 public class UserControllerTests : ControllerUnitTestsBase<UserDto>
 {
     private UserController _userController;
-    
+    private List<string> ExistingDomains;
+    private string ExistingDomain;
+    private string NotExistingDomain;
+    private new Guid ExistingId { get; set; }
+
+    private List<string> emailDomains = new List<string>
+        {
+            "gmail.com",
+            "yahoo.com",
+            "hotmail.com",
+            "outlook.com",
+            "example.com",
+            "aol.com",
+            "icloud.com",
+            "protonmail.com",
+            "mail.com",
+            "live.com",
+            "msn.com",
+            "yandex.com",
+            "zoho.com",
+            "rocketmail.com",
+            "gmx.com",
+            "inbox.com",
+            "me.com",
+            "fastmail.com",
+            "yahoo.co.uk",
+            "ymail.com",
+            "att.net",
+            "cox.net",
+            "comcast.net",
+            "sbcglobal.net",
+            "roadrunner.com",
+            "verizon.net",
+            "earthlink.net",
+            "mac.com",
+            "qq.com",
+            "163.com",
+            "126.com",
+            "sina.com",
+            "sohu.com",
+            "hotmail.co.uk",
+            "btinternet.com",
+            "ntlworld.com",
+            "blueyonder.co.uk",
+            "talktalk.net",
+            "virginmedia.com",
+            // Add more domains as needed
+        };
+
+    #region Setup methods
+
+    private void SetDomains()
+    {
+        SetExistingDomains();
+        SetExistingDomain();
+        SetNotExistingDomain();
+    }
+
+    private void SetExistingDomains()
+    {
+        
+        var r = new Random();
+
+        ExistingDomains = new List<string>();
+
+        for (var i = 0; i < Settings.EntitiesCount; i++)
+        {
+            ExistingDomains.Add(emailDomains[r.Next(emailDomains.Count)]);
+        }
+    }
+
+    private void SetExistingDomain()
+    {
+        var r = new Random();
+        int randomNumber = r.Next(0, ExistingIds.Count);
+
+        ExistingDomain = ExistingDomains[randomNumber];
+        ExistingId = ExistingIds[randomNumber];
+    }
+
+    private void SetNotExistingDomain()
+    {
+        var r = new Random();
+        var notExistingDomains = emailDomains.Where(d => !ExistingDomains.Contains(d)).ToList();
+        var newDomain = notExistingDomains[r.Next(notExistingDomains.Count)];
+
+        NotExistingDomain = newDomain;
+    }
+
+    #endregion
+
     private new async Task Arrange(bool fillDb = true)
     {
         await base.Arrange();
+        SetDomains();
 
         if (fillDb)
         {
             await Helper.FillAttachmentsTable(ExistingIds);
-            await Helper.FillUsersTable(ExistingIds);
+            await Helper.FillUsersTable(ExistingIds, ExistingDomains);
         }
         
         // initialize Controller
@@ -58,8 +149,8 @@ public class UserControllerTests : ControllerUnitTestsBase<UserDto>
         await Arrange();
 
         var email = emailExists ? 
-            GenerateEmail(ExistingId) : 
-            GenerateEmail(NotExistingId);
+            GenerateEmail(ExistingDomain,ExistingId) : 
+            GenerateEmail(NotExistingDomain,NotExistingId);
         
         // Act && Assert
         if (emailExists)
@@ -112,7 +203,7 @@ public class UserControllerTests : ControllerUnitTestsBase<UserDto>
 
         var newUserName = "updated";
 
-        var userToUpdate = GenerateUserDto(Mapper, userExists ? ExistingId : NotExistingId);
+        var userToUpdate = GenerateUserDto(Mapper, userExists ? ExistingDomain : NotExistingDomain ,userExists ? ExistingId : NotExistingId);
         userToUpdate.UserName = newUserName;
 
         // Act && Assert
@@ -156,7 +247,7 @@ public class UserControllerTests : ControllerUnitTestsBase<UserDto>
         {
             Id = idAlreadyExists ? ExistingId : NotExistingId,
             UserName = GenerateUserName(),
-            Email = GenerateEmail(emailAlreadyExists ? ExistingId : NotExistingId),
+            Email = GenerateEmail(emailAlreadyExists ? ExistingDomain : NotExistingDomain,emailAlreadyExists ? ExistingId : NotExistingId),
             Status = UserStatus.Accessible,
             ProfilePictureId = ExistingId
         };

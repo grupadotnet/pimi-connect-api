@@ -9,27 +9,28 @@ public static class DataGenerator
     {
         return $"user{id}";
     }
-    
-    public static string GenerateEmail(Guid id = new ())
-    {
-        return $"user{id}@domain.com";
+
+    public static string GenerateEmail(string domain, Guid id = new())
+    { 
+
+        return $"user{id}@{domain}";
     }
-    
-    public static UserEntity GenerateUserEntity(Guid id = new ())
+
+    public static UserEntity GenerateUserEntity(string domain, Guid id = new ())
     {
         return new UserEntity()
         {
             Id = id,
             UserName = GenerateUserName(id),
-            Email = GenerateEmail(id),
+            Email = GenerateEmail(domain,id),
             Status = UserStatus.Accessible,
             ProfilePictureId = id
         };
     }
     
-    public static UserDto GenerateUserDto(IMapper mapper, Guid id = new ())
+    public static UserDto GenerateUserDto(IMapper mapper, string domain, Guid id = new ())
     {
-        var userEntity = GenerateUserEntity(id);
+        var userEntity = GenerateUserEntity(domain, id);
 
         return mapper.Map<UserDto>(userEntity);
     }
