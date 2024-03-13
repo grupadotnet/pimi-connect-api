@@ -98,9 +98,9 @@ namespace pimi_connect_api.Services
 
         private async Task<(bool Exists, ChatEntity? Entity)> CheckIfExistsAndReturn(Guid id)
         {
-            ;
             var chatEntity = await _dbContext
                 .Chats
+                .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             return (chatEntity != null, chatEntity);
