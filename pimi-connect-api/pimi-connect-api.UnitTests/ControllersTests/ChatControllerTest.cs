@@ -10,17 +10,64 @@ using System.Threading.Tasks;
 
 namespace pimi_connect_api.UnitTests.ControllersTests
 {
+    [Collection("TestsWhichUseDatabase_pimi-connect-test")]
     public class ChatControllerTest : ControllerUnitTestsBase<ChatDto>
     {
         private ChatController _chatController;
 
+        private List<Guid> AttachmentsExistingIds;
+        private Guid AttachmentsExistingId;
+        private Guid AttachmentsNoExistingId;
+
+        #region Setup Methods
+
+        private void SetIds()
+        {
+            SetExistingIds();
+            SetExistingId();
+            SetNotExistingId();
+        }
+
+        private void SetExistingIds()
+        {
+            AttachmentsExistingIds = new List<Guid>();
+
+            for (var i = 0; i < Settings.EntitiesCount; i++)
+            {
+                AttachmentsExistingIds.Add(Guid.NewGuid());
+            }
+        }
+
+        private void SetExistingId()
+        {
+            var r = new Random();
+
+            AttachmentsExistingId = AttachmentsExistingIds[r.Next(0, AttachmentsExistingIds.Count)];
+        }
+
+        private void SetNotExistingId()
+        {
+            var newGuid = Guid.NewGuid();
+
+            while (AttachmentsExistingIds.Contains(newGuid))
+            {
+                newGuid = Guid.NewGuid();
+            }
+
+            AttachmentsNoExistingId = newGuid;
+        }
+
+        #endregion
+
         private new async Task Arrange(bool fillDb = true)
         {
+            SetIds();
             await base.Arrange();
 
             if (fillDb)
             {
                 await Helper.FillChatsTable(ExistingIds);
+                await Helper.FillAttachmentsTable(AttachmentsExistingIds);
             }
 
             // initialize Controller
@@ -81,13 +128,13 @@ namespace pimi_connect_api.UnitTests.ControllersTests
         [Theory]
         [InlineData(true)] // should successfully return the chat with given name
         [InlineData(false)] // should return status 404
-        public async void UpdateASyncTest(bool chatExists)
+        public async void UpdateAsyncTest(bool chatExists)
         {
             await Arrange();
 
             var newChatName = "updated";
 
-            var chatToUpdate = GenerateChatDto(Mapper, chatExists ? ExistingId : NotExistingId);
+            var chatToUpdate = GenerateChatDto(Mapper, chatExists ? ExistingId : NotExistingId, AttachmentsExistingId);
             chatToUpdate.Name = newChatName;
 
             if (chatExists)
@@ -132,20 +179,10 @@ namespace pimi_connect_api.UnitTests.ControllersTests
             // Arrange
             await Arrange();
 
-            var chatToAdd = new ChatDto
-            {
-                Id = idExists ? ExistingId : NotExistingId,
-                Name = GenerateUserName(),
-                Thumbnail = new AttachmentDto
-                {
-                    Id = Guid.NewGuid(),
-                    ObjectId = Guid.NewGuid(),
-                    Type = "image/png",
-                    Path = "path/to/file",
-                    TableName = "Chats",
-                },
-                ThumbnailKey = Guid.NewGuid(),
-            };
+            var thumbnailID = Guid.NewGuid();
+
+            var chatToAdd = GenerateChatDto(Mapper, idExists ? ExistingId : NotExistingId);
+            
 
             // Act && Assert
             if (!idExists)
@@ -183,8 +220,8 @@ namespace pimi_connect_api.UnitTests.ControllersTests
         }
 
         [Theory]
-        [InlineData(true)] // should successfully delete the chat
-        [InlineData(false)] // should return status 404
+        [InlineData(true)]
+        [InlineData(false)] 
         public async void DeleteAsyncTest(bool chatExists)
         {
             await Arrange();

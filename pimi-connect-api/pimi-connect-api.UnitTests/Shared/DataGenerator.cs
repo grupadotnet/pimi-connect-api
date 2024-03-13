@@ -34,25 +34,19 @@ public static class DataGenerator
         return mapper.Map<UserDto>(userEntity);
     }
 
-    public static ChatEntity GenerateChatEntity(Guid id = new ())
+    public static ChatEntity GenerateChatEntity(Guid id = new (), Guid thumbnailID = new())
     {
         return new ChatEntity()
         {
             Id = id,
             Name = $"chat{id}",
-            ThumbnailKey = Guid.NewGuid(),
-            Thumbnail = new AttachmentEntity()
-            {
-                Id = Guid.NewGuid(),
-                ObjectId = Guid.NewGuid(),
-                Type = "image/png",
-                Path = "path/to/file",
-                TableName = "Chats",
-            }
+            ThumbnailId = thumbnailID,
+            Thumbnail = GenerateAttachmentEntity(thumbnailID)
+            
         };
     }
 
-    public static ChatDto GenerateChatDto(IMapper mapper, Guid id = new ())
+    public static ChatDto GenerateChatDto(IMapper mapper, Guid id = new (), Guid thumbnailID = new())
     {
         var chatEntity = GenerateChatEntity(id);
 
@@ -60,7 +54,7 @@ public static class DataGenerator
     }
 
     #endregion
-    #endregion
+    
     
     #region Generate Attachment related data
     public static AttachmentEntity GenerateAttachmentEntity(Guid id = new ())
