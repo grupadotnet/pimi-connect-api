@@ -33,7 +33,28 @@ public static class DataGenerator
 
         return mapper.Map<UserDto>(userEntity);
     }
+
+    public static ChatEntity GenerateChatEntity(Guid id = new (), Guid thumbnailID = new())
+    {
+        return new ChatEntity()
+        {
+            Id = id,
+            Name = $"chat{id}",
+            ThumbnailId = thumbnailID,
+            Thumbnail = GenerateAttachmentEntity(thumbnailID)
+            
+        };
+    }
+
+    public static ChatDto GenerateChatDto(IMapper mapper, Guid id = new (), Guid thumbnailID = new())
+    {
+        var chatEntity = GenerateChatEntity(id);
+
+        return mapper.Map<ChatDto>(chatEntity);
+    }
+
     #endregion
+    
     
     #region Generate Attachment related data
     public static AttachmentEntity GenerateAttachmentEntity(Guid id = new ())
