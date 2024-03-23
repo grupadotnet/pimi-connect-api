@@ -8,5 +8,5 @@ public class AttachmentDto
     public AttachmentType Type { get; set; }
     public string Extension { get; set; }
     public string Path { get; set; }
-    public string publicName { get; set; }
+    public string PublicName { get; set; }
 }

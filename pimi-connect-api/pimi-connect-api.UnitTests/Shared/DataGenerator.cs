@@ -44,7 +44,7 @@ public static class DataGenerator
             Type = AttachmentType.ProfilePicture,
             Extension = ".jpg",
             Path = "/some/path",
-            publicName = "publicName"
+            PublicName = "publicName"
         };
     }
     
