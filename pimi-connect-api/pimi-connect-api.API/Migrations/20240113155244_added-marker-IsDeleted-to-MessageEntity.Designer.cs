@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using pimi_connect_app.Data.AppDbContext;
@@ -11,9 +12,11 @@ using pimi_connect_app.Data.AppDbContext;
 namespace pimi_connect_api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240113155244_added-marker-IsDeleted-to-MessageEntity")]
+    partial class addedmarkerIsDeletedtoMessageEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,23 +31,23 @@ namespace pimi_connect_api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Extension")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<Guid?>("MessageEntityId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ObjectId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Path")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("PublicName")
+                    b.Property<string>("TableName")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -67,13 +70,9 @@ namespace pimi_connect_api.Migrations
                         .IsRequired()
                         .HasColumnType("bytea");
 
-                    b.Property<byte[]>("PrivateKey")
-                        .IsRequired()
-                        .HasColumnType("bytea");
-
                     b.HasKey("Id");
 
-                    b.ToTable("Auths");
+                    b.ToTable("AuthEntities");
                 });
 
             modelBuilder.Entity("pimi_connect_app.Data.Entities.ChatEntity", b =>
@@ -86,7 +85,10 @@ namespace pimi_connect_api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("ThumbnailId")
+                    b.Property<Guid?>("ThumbnailId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ThumbnailKey")
                         .HasColumnType("uuid");
 
                     b.Property<int>("g")
@@ -100,46 +102,6 @@ namespace pimi_connect_api.Migrations
                     b.HasIndex("ThumbnailId");
 
                     b.ToTable("Chats");
-                });
-
-            modelBuilder.Entity("pimi_connect_app.Data.Entities.ChatPasswordEntity", b =>
-                {
-                    b.Property<Guid>("PasswordContainerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<byte[]>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("bytea");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.ToTable("ChatPasswords");
-                });
-
-            modelBuilder.Entity("pimi_connect_app.Data.Entities.EmailEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("SentAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Subject")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Template")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("To")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Emails");
                 });
 
             modelBuilder.Entity("pimi_connect_app.Data.Entities.MessageEntity", b =>
@@ -160,7 +122,7 @@ namespace pimi_connect_api.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("PasswordContainerId")
+                    b.Property<Guid>("IdPasswordContainer")
                         .HasColumnType("uuid");
 
                     b.Property<bool>("IsDeleted")
@@ -173,34 +135,17 @@ namespace pimi_connect_api.Migrations
 
                     b.HasIndex("ChatEntityId");
 
-                    b.HasIndex("PasswordContainerId");
-
                     b.HasIndex("UserCreatedId");
 
                     b.ToTable("Messages");
                 });
 
-            modelBuilder.Entity("pimi_connect_app.Data.Entities.PasswordContainerEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ChatId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PasswordContainers");
-                });
-
             modelBuilder.Entity("pimi_connect_app.Data.Entities.UserChatEntity", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("ChatId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ChatId")
+                    b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("LastReadMessageId")
@@ -218,8 +163,6 @@ namespace pimi_connect_api.Migrations
 
                     b.Property<Guid>("UserKeyId")
                         .HasColumnType("uuid");
-
-                    b.HasKey("Id");
 
                     b.HasIndex("ChatId");
 
@@ -244,7 +187,10 @@ namespace pimi_connect_api.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
-                    b.Property<Guid>("ProfilePictureId")
+                    b.Property<Guid?>("ProfilePictureId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ProfilePictureKey")
                         .HasColumnType("uuid");
 
                     b.Property<int>("Status")
@@ -267,21 +213,6 @@ namespace pimi_connect_api.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("pimi_connect_app.Data.Entities.UserKeyEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<byte[]>("IndirectKey")
-                        .IsRequired()
-                        .HasColumnType("bytea");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("UserKeys");
-                });
-
             modelBuilder.Entity("pimi_connect_app.Data.Entities.AttachmentEntity", b =>
                 {
                     b.HasOne("pimi_connect_app.Data.Entities.MessageEntity", null)
@@ -293,9 +224,7 @@ namespace pimi_connect_api.Migrations
                 {
                     b.HasOne("pimi_connect_app.Data.Entities.AttachmentEntity", "Thumbnail")
                         .WithMany()
-                        .HasForeignKey("ThumbnailId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ThumbnailId");
 
                     b.Navigation("Thumbnail");
                 });
@@ -306,21 +235,11 @@ namespace pimi_connect_api.Migrations
                         .WithMany("Messages")
                         .HasForeignKey("ChatEntityId");
 
-                    b.HasOne("pimi_connect_app.Data.Entities.PasswordContainerEntity", "PasswordContainer")
-                        .WithMany()
-                        .HasForeignKey("PasswordContainerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("pimi_connect_app.Data.Entities.UserEntity", "UserCreated")
-                        .WithMany("Messages")
+                        .WithMany()
                         .HasForeignKey("UserCreatedId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Chat");
-
-                    b.Navigation("PasswordContainer");
 
                     b.Navigation("UserCreated");
                 });
@@ -358,9 +277,7 @@ namespace pimi_connect_api.Migrations
 
                     b.HasOne("pimi_connect_app.Data.Entities.AttachmentEntity", "ProfilePicture")
                         .WithMany()
-                        .HasForeignKey("ProfilePictureId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProfilePictureId");
 
                     b.Navigation("Auth");
 
@@ -375,11 +292,6 @@ namespace pimi_connect_api.Migrations
             modelBuilder.Entity("pimi_connect_app.Data.Entities.MessageEntity", b =>
                 {
                     b.Navigation("Attachments");
-                });
-
-            modelBuilder.Entity("pimi_connect_app.Data.Entities.UserEntity", b =>
-                {
-                    b.Navigation("Messages");
                 });
 #pragma warning restore 612, 618
         }
