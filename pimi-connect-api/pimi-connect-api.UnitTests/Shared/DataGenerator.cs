@@ -28,6 +28,38 @@ public static class DataGenerator
         return $"user{id}@{domain}";
     }
 
+    public static byte[] GeneratePassword(byte[] salt)
+    {
+        Random r = new Random();
+        int lenght = r.Next(8, 16);
+        string password = string.Empty;
+        for (int i = 0; i < lenght; i++)
+        {
+            password += (char)r.Next(33, 126);
+        }
+
+        byte[] passwordHashed;
+
+        using(SHA256 sha256 = SHA256.Create())
+        {
+            passwordHashed = sha256.ComputeHash(Encoding.ASCII.GetBytes(password + Convert.ToBase64String(salt)));
+        }
+
+        return passwordHashed;
+    }
+
+    public static AuthEntity GenerateAuthEntity(Guid id = new ())
+    {
+        byte[] salt = GenerateRandomBytes(16);
+        return new AuthEntity()
+        {
+            Id = id,
+            PasswordSalt = salt,
+            PasswordHash = GeneratePassword(salt),
+            PrivateKey = GenerateRandomBytes(32)
+        };
+    }
+
     public static UserEntity GenerateUserEntity(string domain, Guid id = new ())
     {
         return new UserEntity()
