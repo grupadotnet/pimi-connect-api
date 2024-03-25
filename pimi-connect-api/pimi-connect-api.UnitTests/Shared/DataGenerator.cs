@@ -68,7 +68,12 @@ public static class DataGenerator
             UserName = GenerateUserName(id),
             Email = GenerateEmail(domain,id),
             Status = UserStatus.Accessible,
-            ProfilePictureId = id
+            ProfilePictureId = id,
+            Auth = GenerateAuthEntity(id),
+            ProfilePicture = GenerateAttachmentEntity(id)
+            //UserChats
+            //Messages
+            
         };
     }
     
