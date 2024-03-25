@@ -178,4 +178,41 @@ public static class DataGenerator
         return mapper.Map<AttachmentDto>(attachmentEntity);
     }
     #endregion
+
+    #region Generate UserChat related data
+
+    public static UserChatEntity GenerateUserChatEntity(UserEntity user, Guid id = new ())
+    {
+        var chatID = Guid.NewGuid();
+        var lastmessageID = Guid.NewGuid();
+        var userKeyID = Guid.NewGuid();
+        return new UserChatEntity
+        {
+            Id = id,
+            UserId = user.Id,
+            ChatId = chatID,
+            LastReadMessageId = lastmessageID,
+            NickName = GenerateNickName(id),
+            //LastReadMessage = GenerateMessageEntity(lastmessageID),
+            Role = ChatRole.Admin,
+            User = user,
+            //Chat = GenerateChatEntity(chatID),
+            UserKeyId = userKeyID
+
+        };
+    }
+
+    public static UserChatDto GenerateUserChatDto(IMapper mapper, UserEntity user, Guid id = new ())
+    {
+        var userChatEntity = GenerateUserChatEntity(user, id);
+
+        return mapper.Map<UserChatDto>(userChatEntity);
+    }
+
+    private static string GenerateNickName(Guid id = new())
+    {
+        return $"nick{id}";
+    }
+
+    #endregion
 }
