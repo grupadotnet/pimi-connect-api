@@ -1,10 +1,22 @@
 using AutoMapper;
+using System;
+using System.Runtime.Intrinsics.Arm;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace pimi_connect_api.UnitTests.Shared;
 
 public static class DataGenerator
 {
     #region Generate User related data
+    private static byte[] GenerateRandomBytes(int length)
+    {
+        var random = new Random();
+        byte[] buffer = new byte[length];
+        random.NextBytes(buffer);
+        return buffer;
+    }
+
     public static string GenerateUserName(Guid id = new ())
     {
         return $"user{id}";
