@@ -215,4 +215,51 @@ public static class DataGenerator
     }
 
     #endregion
+
+    #region Generate Message related data
+
+    public static MessageEntity GenerateMessageEntity(UserChatEntity userChat, Guid id = new ())
+    {
+        var userCreatedID = Guid.NewGuid();
+        var attachmentID = Guid.NewGuid();
+        var passwordContainerID = Guid.NewGuid();
+        var attachment = GenerateAttachmentEntity(attachmentID);
+        return new MessageEntity
+        {
+            Id = id,
+            Content = $"content{id}",
+            CreatedDate = DateTime.Now,
+            ChatId = userChat.ChatId,
+            UserCreatedId = userChat.UserId,
+            AttachmentId = attachmentID,
+            PasswordContainerId = passwordContainerID,
+            //Chat = GenerateChatEntity(chatID),
+            UserCreated = GenerateUserEntity("gmail.com", userCreatedID),
+            Attachments = new List<AttachmentEntity> { attachment },
+            PasswordContainer = GeneratePasswordContainerEntity(userChat.ChatId,passwordContainerID)
+        };
+    }
+
+    public static MessageDto GenerateMessageDto(IMapper mapper, UserChatEntity userChat, Guid id = new ())
+    {
+        var messageEntity = GenerateMessageEntity(userChat, id);
+
+        return mapper.Map<MessageDto>(messageEntity);
+    }
+
+    #endregion
+
+    #region Generate PasswordContainer related data
+
+    public static PasswordContainerEntity GeneratePasswordContainerEntity(Guid chatID,Guid id = new ())
+    {
+        return new PasswordContainerEntity
+        {
+            Id = id,
+            ChatId = chatID,
+            //ChatPassword = GenerateChatPassword()
+        };
+    }
+
+    #endregion
 }
