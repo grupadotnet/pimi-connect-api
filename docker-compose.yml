@@ -1,6 +1,14 @@
 version: "3.8"
 
 services:
+  app:
+    container_name: pimi-connect-api
+    image: mcr.microsoft.com/dotnet/sdk:8.0
+    volumes:
+      - ./pimi-connect-api/pimi-connect-api.API:/app
+    working_dir: /app
+    command: dotnet run
+
   postgres:
     container_name: pimi-connect-postgresql
     image: postgres
