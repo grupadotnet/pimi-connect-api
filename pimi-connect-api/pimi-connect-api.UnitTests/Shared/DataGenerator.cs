@@ -54,27 +54,39 @@ public static class DataGenerator
         return new AuthEntity()
         {
             Id = id,
-            PasswordSalt = salt,
+            PrivateKey = GenerateRandomBytes(32),
             PasswordHash = GeneratePassword(salt),
-            PrivateKey = GenerateRandomBytes(32)
+            PasswordSalt = salt
+
         };
     }
 
     public static UserEntity GenerateUserEntity(string domain, Guid id = new ())
     {
-        return new UserEntity()
+        var userEntity = new UserEntity()
         {
             Id = id,
             UserName = GenerateUserName(id),
-            Email = GenerateEmail(domain,id),
+            Email = GenerateEmail(domain, id),
             Status = UserStatus.Accessible,
             ProfilePictureId = id,
             Auth = GenerateAuthEntity(id),
-            ProfilePicture = GenerateAttachmentEntity(id)
+            ProfilePicture = GenerateAttachmentEntity(),
             //UserChats
-            //Messages
-            
+            Messages = new List<MessageEntity>()
+
         };
+        var userChatEntity = GenerateUserChatEntity(userEntity);
+        userEntity.Messages.Add(GenerateMessageEntity(userChatEntity));
+
+        /*for (int i = 0; i < 5; i++)
+        {
+            
+            //userEntity.UserChats.Add(GenerateUserChatEntity(userEntity));
+            
+        }*/
+
+        return userEntity;
     }
     
     public static UserDto GenerateUserDto(IMapper mapper, string domain, Guid id = new ())
@@ -185,21 +197,25 @@ public static class DataGenerator
     {
         var chatID = Guid.NewGuid();
         var lastmessageID = Guid.NewGuid();
-        var userKeyID = Guid.NewGuid();
-        return new UserChatEntity
+        var userKey = GenerateUserKeyEntity();
+
+        var userChatEntity = new UserChatEntity
         {
             Id = id,
             UserId = user.Id,
             ChatId = chatID,
             LastReadMessageId = lastmessageID,
             NickName = GenerateNickName(id),
-            //LastReadMessage = GenerateMessageEntity(lastmessageID),
             Role = ChatRole.Admin,
             User = user,
             //Chat = GenerateChatEntity(chatID),
-            UserKeyId = userKeyID
+            UserKeyId = userKey.Id
 
         };
+
+        userChatEntity.LastReadMessage = GenerateMessageEntity(userChatEntity, lastmessageID);
+
+        return userChatEntity;
     }
 
     public static UserChatDto GenerateUserChatDto(IMapper mapper, UserEntity user, Guid id = new ())
@@ -257,7 +273,30 @@ public static class DataGenerator
         {
             Id = id,
             ChatId = chatID,
-            //ChatPassword = GenerateChatPassword()
+            //ChatPassword = new List<ChatPasswordEntity>() { GenerateChatPasswordEntity() }
+        };
+    }
+
+    public static ChatPasswordEntity GenerateChatPasswordEntity(Guid id = new ())
+    {
+        return new ChatPasswordEntity
+        {
+            PasswordContainerId = id,
+            PasswordHash = GenerateRandomBytes(32),
+            UserId = Guid.NewGuid()
+        };
+    }
+
+    #endregion
+
+    #region Generate UserKey related data
+
+    public static UserKeyEntity GenerateUserKeyEntity(Guid id = new ())
+    {
+        return new UserKeyEntity
+        {
+            Id = id,
+            IndirectKey = GenerateRandomBytes(32)
         };
     }
 
