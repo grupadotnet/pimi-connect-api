@@ -63,16 +63,18 @@ public static class DataGenerator
 
     public static UserEntity GenerateUserEntity(string domain, Guid id = new ())
     {
+        var profilePictureId = Guid.NewGuid();
+        var authId = Guid.NewGuid();
         var userEntity = new UserEntity()
         {
             Id = id,
             UserName = GenerateUserName(id),
             Email = GenerateEmail(domain, id),
             Status = UserStatus.Accessible,
-            ProfilePictureId = id,
-            Auth = GenerateAuthEntity(id),
-            ProfilePicture = GenerateAttachmentEntity(),
-            //UserChats
+            ProfilePictureId = profilePictureId,
+            Auth = GenerateAuthEntity(authId),
+            ProfilePicture = GenerateAttachmentEntity(profilePictureId, AttachmentType.ProfilePicture),
+            //UserChats = new List<UserChatEntity>(),
             Messages = new List<MessageEntity>()
 
         };
@@ -169,14 +171,14 @@ public static class DataGenerator
         string path = $"/{fileTypePrefixes.Keys.ElementAt(randomNumber)}/{fileName}";
         return new Tuple<string,string>(fileName, path);
     }
-    public static AttachmentEntity GenerateAttachmentEntity(Guid id = new ())
+    public static AttachmentEntity GenerateAttachmentEntity(Guid id = new (), AttachmentType type = AttachmentType.MessageAttachment)
     {
         var fileNameAndPath = GenerateFileNameAndPath(id);
 
         return new AttachmentEntity
         {
             Id = id,
-            Type = AttachmentType.MessageAttachment,
+            Type = type,
             Extension = GenerateExtension(),
             Path = fileNameAndPath.Item2,
             publicName = fileNameAndPath.Item1
@@ -236,12 +238,10 @@ public static class DataGenerator
 
     public static MessageEntity GenerateMessageEntity(UserChatEntity userChat, Guid id = new ())
     {
-        var userCreatedID = Guid.NewGuid();
+        
         var attachmentID = Guid.NewGuid();
         var passwordContainerID = Guid.NewGuid();
         var attachment = GenerateAttachmentEntity(Guid.NewGuid());
-        var userTest = userChat.User;
-        var passwordContainerTest = GeneratePasswordContainerEntity(userChat.ChatId, passwordContainerID);
 
         return new MessageEntity
         {
@@ -253,9 +253,9 @@ public static class DataGenerator
             AttachmentId = attachmentID,
             PasswordContainerId = passwordContainerID,
             Chat = userChat.Chat,
-            UserCreated = userTest,
+            UserCreated = userChat.User,
             Attachments = new List<AttachmentEntity> { attachment },
-            PasswordContainer = passwordContainerTest
+            PasswordContainer = GeneratePasswordContainerEntity(userChat.ChatId, passwordContainerID)
         };
     }
 
