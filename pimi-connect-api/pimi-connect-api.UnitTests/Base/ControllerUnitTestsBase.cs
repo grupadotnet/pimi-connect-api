@@ -119,6 +119,7 @@ public abstract class ControllerUnitTestsBase<TDtoType>  where TDtoType : class
             b => b.MigrationsAssembly(Settings.MigrationsAssemblyName));
 
         TestDbContext = new AppDbContext(optionsBuilder.Options);
+        
     }
     
     #endregion

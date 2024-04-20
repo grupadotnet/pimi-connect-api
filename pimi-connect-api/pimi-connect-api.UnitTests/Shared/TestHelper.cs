@@ -32,7 +32,8 @@ public class TestHelper
             await _testDbContext
                 .Users.AddAsync(newUser);
         }
-        
+
+        ;
         await _testDbContext.SaveChangesAsync();
         _testDbContext.ChangeTracker.Clear();
     }

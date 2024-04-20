@@ -106,7 +106,7 @@ public class UserControllerTests : ControllerUnitTestsBase<UserDto>
 
         if (fillDb)
         {
-            await Helper.FillAttachmentsTable(ExistingIds);
+            //await Helper.FillAttachmentsTable(ExistingIds);
             await Helper.FillUsersTable(ExistingIds, ExistingDomains);
         }
         
@@ -292,6 +292,7 @@ public class UserControllerTests : ControllerUnitTestsBase<UserDto>
         // Act && Assert
         if (userExists)
         {
+            ;
             var result = await _userController.DeleteAsync(ExistingId);
             var resultTuple = GetStatusAndContentFromResult(result);
 

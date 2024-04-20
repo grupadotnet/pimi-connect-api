@@ -176,7 +176,7 @@ public static class DataGenerator
         return new AttachmentEntity
         {
             Id = id,
-            Type = AttachmentType.ProfilePicture,
+            Type = AttachmentType.MessageAttachment,
             Extension = GenerateExtension(),
             Path = fileNameAndPath.Item2,
             publicName = fileNameAndPath.Item1
@@ -208,12 +208,12 @@ public static class DataGenerator
             NickName = GenerateNickName(id),
             Role = ChatRole.Admin,
             User = user,
-            //Chat = GenerateChatEntity(chatID),
+            Chat = GenerateChatEntity(chatID),
             UserKeyId = userKey.Id
 
         };
 
-        //userChatEntity.LastReadMessage = GenerateMessageEntity(userChatEntity, lastmessageID);
+        userChatEntity.LastReadMessage = GenerateMessageEntity(userChatEntity, lastmessageID);
 
         return userChatEntity;
     }
@@ -239,7 +239,10 @@ public static class DataGenerator
         var userCreatedID = Guid.NewGuid();
         var attachmentID = Guid.NewGuid();
         var passwordContainerID = Guid.NewGuid();
-        var attachment = GenerateAttachmentEntity(attachmentID);
+        var attachment = GenerateAttachmentEntity(Guid.NewGuid());
+        var userTest = userChat.User;
+        var passwordContainerTest = GeneratePasswordContainerEntity(userChat.ChatId, passwordContainerID);
+
         return new MessageEntity
         {
             Id = id,
@@ -249,10 +252,10 @@ public static class DataGenerator
             UserCreatedId = userChat.UserId,
             AttachmentId = attachmentID,
             PasswordContainerId = passwordContainerID,
-            //Chat = GenerateChatEntity(chatID),
-            UserCreated = GenerateUserEntity("gmail.com", userCreatedID),
+            Chat = userChat.Chat,
+            UserCreated = userTest,
             Attachments = new List<AttachmentEntity> { attachment },
-            PasswordContainer = GeneratePasswordContainerEntity(userChat.ChatId,passwordContainerID)
+            PasswordContainer = passwordContainerTest
         };
     }
 
@@ -328,7 +331,24 @@ public static class DataGenerator
 
     #region Generate Chat related data
 
-    //Methods in ChatEntity branch
+    public static ChatEntity GenerateChatEntity(Guid id = new(), Guid thumbnailID = new())
+    {
+        return new ChatEntity()
+        {
+            Id = id,
+            Name = $"chat{id}",
+            ThumbnailId = thumbnailID,
+            Thumbnail = GenerateAttachmentEntity(thumbnailID)
+
+        };
+    }
+
+    public static ChatDto GenerateChatDto(IMapper mapper, Guid id = new(), Guid thumbnailID = new())
+    {
+        var chatEntity = GenerateChatEntity(id);
+
+        return mapper.Map<ChatDto>(chatEntity);
+    }
 
     #endregion
 }

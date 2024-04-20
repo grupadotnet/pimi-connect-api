@@ -16,7 +16,10 @@ public class AppDbContext : DbContext
     public DbSet<PasswordContainerEntity> PasswordContainers { get; set; }
     public DbSet<UserKeyEntity> UserKeys { get; set; }
 
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) 
+    {
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+    }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
