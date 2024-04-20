@@ -213,7 +213,7 @@ public static class DataGenerator
 
         };
 
-        userChatEntity.LastReadMessage = GenerateMessageEntity(userChatEntity, lastmessageID);
+        //userChatEntity.LastReadMessage = GenerateMessageEntity(userChatEntity, lastmessageID);
 
         return userChatEntity;
     }
@@ -299,6 +299,36 @@ public static class DataGenerator
             IndirectKey = GenerateRandomBytes(32)
         };
     }
+
+    #endregion
+
+    #region Generate Email related data
+
+    public static EmailEntity GenerateEmailEntity(Guid id = new ())
+    {
+        return new EmailEntity
+        {
+            Id = id,
+            To = $"user{id}",
+            Subject = $"subject{id}",
+            Template = EmailTemplate.NewAccount,
+            SentAt = DateTime.Now
+        };
+    }
+
+    // EmailDto does not exist
+    /* public static EmailDto GenerateEmailDto(IMapper mapper, Guid id = new ())
+     {
+         var emailEntity = GenerateEmailEntity(id);  
+
+         return mapper.Map<EmailDto>(emailEntity);
+     }*/
+
+    #endregion
+
+    #region Generate Chat related data
+
+    //Methods in ChatEntity branch
 
     #endregion
 }
