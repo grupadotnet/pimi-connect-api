@@ -61,24 +61,28 @@ public static class DataGenerator
         };
     }
 
-    public static UserEntity GenerateUserEntity(string domain, Guid id = new ())
+    public static UserEntity GenerateUserEntity(string domain, Guid id = new (), Guid? profilePictureId = null)
     {
-        var profilePictureId = Guid.NewGuid();
+        if(profilePictureId == null) profilePictureId = Guid.NewGuid();
+
         var authId = Guid.NewGuid();
+        var profilePicture = GenerateAttachmentEntity((Guid)profilePictureId, AttachmentType.ProfilePicture);
+
         var userEntity = new UserEntity()
         {
             Id = id,
             UserName = GenerateUserName(id),
             Email = GenerateEmail(domain, id),
             Status = UserStatus.Accessible,
-            ProfilePictureId = profilePictureId,
+            ProfilePictureId = (Guid)profilePictureId,
             Auth = GenerateAuthEntity(authId),
-            ProfilePicture = GenerateAttachmentEntity(profilePictureId, AttachmentType.ProfilePicture),
+            ProfilePicture = profilePicture,
             //UserChats = new List<UserChatEntity>(),
             Messages = new List<MessageEntity>()
 
         };
         var userChatEntity = GenerateUserChatEntity(userEntity);
+        //userEntity.UserChats.Add(userChatEntity);
         userEntity.Messages.Add(GenerateMessageEntity(userChatEntity));
 
         /*for (int i = 0; i < 5; i++)
@@ -91,9 +95,9 @@ public static class DataGenerator
         return userEntity;
     }
     
-    public static UserDto GenerateUserDto(IMapper mapper, string domain, Guid id = new ())
+    public static UserDto GenerateUserDto(IMapper mapper, string domain, Guid id = new (), Guid? profilePictureId = null)
     {
-        var userEntity = GenerateUserEntity(domain, id);
+        var userEntity = GenerateUserEntity(domain, id, profilePictureId);
 
         return mapper.Map<UserDto>(userEntity);
     }
@@ -241,7 +245,7 @@ public static class DataGenerator
         
         var attachmentID = Guid.NewGuid();
         var passwordContainerID = Guid.NewGuid();
-        var attachment = GenerateAttachmentEntity(Guid.NewGuid());
+        var attachment = GenerateAttachmentEntity(attachmentID);
 
         return new MessageEntity
         {
@@ -254,7 +258,7 @@ public static class DataGenerator
             PasswordContainerId = passwordContainerID,
             Chat = userChat.Chat,
             UserCreated = userChat.User,
-            Attachments = new List<AttachmentEntity> { attachment },
+            //Attachments = new List<AttachmentEntity> { attachment }, Przy usuwaniu u¿ytkownika:  modyfikacja lub usuniêcie na tabeli "Messages" narusza klucz obcy "FK_Attachments_Messages_MessageEntityId" tabeli "Attachments"
             PasswordContainer = GeneratePasswordContainerEntity(userChat.ChatId, passwordContainerID)
         };
     }

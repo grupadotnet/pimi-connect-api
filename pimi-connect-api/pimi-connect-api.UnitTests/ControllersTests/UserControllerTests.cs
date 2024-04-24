@@ -106,13 +106,15 @@ public class UserControllerTests : ControllerUnitTestsBase<UserDto>
 
         if (fillDb)
         {
-            //await Helper.FillAttachmentsTable(ExistingIds);
+            await Helper.FillAttachmentsTable(ExistingIds);
             await Helper.FillUsersTable(ExistingIds, ExistingDomains);
         }
         
         // initialize Controller
         var userService = new UserService(TestDbContext, Mapper);
         _userController = new UserController(userService);
+
+        
     }
     
     [Theory]
@@ -203,7 +205,9 @@ public class UserControllerTests : ControllerUnitTestsBase<UserDto>
 
         var newUserName = "updated";
 
-        var userToUpdate = GenerateUserDto(Mapper, userExists ? ExistingDomain : NotExistingDomain ,userExists ? ExistingId : NotExistingId);
+        var existingAttachmentId = ExistingIds.Where(x => x != ExistingId).FirstOrDefault();
+
+        var userToUpdate = GenerateUserDto(Mapper, userExists ? ExistingDomain : NotExistingDomain ,userExists ? ExistingId : NotExistingId, userExists ? existingAttachmentId : null);
         userToUpdate.UserName = newUserName;
 
         // Act && Assert
