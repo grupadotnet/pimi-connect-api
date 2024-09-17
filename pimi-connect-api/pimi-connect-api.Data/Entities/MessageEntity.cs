@@ -3,14 +3,17 @@
     public class MessageEntity
     {
         public Guid Id { get; set; }
-        public string Content { get; set; }
+        public string? Content { get; set; }
         public DateTime CreatedDate { get; set; }
-        public Guid ChatId { get; set; }
+        public bool IsDeleted { get; set; } = false;
+        //public Guid ChatId { get; set; }
         public Guid UserCreatedId {  get; set; }
         public Guid AttachmentId { get; set; }
+
         public Guid PasswordContainerId { get; set; }
         public ChatEntity Chat { get; set; }
         public UserEntity UserCreated { get; set; }
+
         public List<AttachmentEntity>? Attachments { get; set; }
         public PasswordContainerEntity PasswordContainer { get; set; }
     }

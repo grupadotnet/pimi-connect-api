@@ -18,9 +18,16 @@ namespace pimi_connect_api.Services
             _dbContext = dbContext;
             _mapper = mapper;
         }
-        public Task<MessageDto> AddMessageAsync(MessageDto messageDto)
+        public async Task<MessageDto> AddMessageAsync(MessageDto messageDto)
         {
-            throw new NotImplementedException();
+            var messageEntityToAdd = _mapper.Map<MessageEntity>(messageDto);
+           
+            await _dbContext.AddAsync(messageEntityToAdd);
+
+            if (!await Save())
+                throw new InternalServerError500Exception($"Something went wrong while saving");
+
+            return messageDto;
         }
 
         public async Task<MessageDto> GetMessageAsync(Guid messageId)
@@ -39,15 +46,33 @@ namespace pimi_connect_api.Services
             return messageDtoList;
         }
 
-        public Task<IEnumerable<MessageDto>> GetMessagesByUserIdAsync()
+        public async Task<IEnumerable<MessageDto>> GetMessagesByUserIdAsync(Guid userId)
+        {
+            var messageEntities = await _dbContext
+               .Messages.Where(m => m.UserCreatedId == userId).ToListAsync();
+
+            var messageDtoList = _mapper.Map<List<MessageDto>>(messageEntities);
+            return messageDtoList;
+        }
+
+        public Task<IEnumerable<MessageDto>> GetMessagesByChatIdAsync(Guid chatId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<MessageDto>> GetMessagesByChatIdAsync()
+        public async Task DeleteMessageAsync(Guid messageId)
         {
-            throw new NotImplementedException();
+            var messageEntityToRemove = await CheckIfExistsAndReturn(messageId);
+
+            messageEntityToRemove.IsDeleted = true;
+            _dbContext.Messages.Update(messageEntityToRemove);
+
+            //_dbContext.Messages.Remove(messageEntityToRemove);
+            
+            if (!await Save())
+                throw new InternalServerError500Exception($"Something went wrong while saving");
         }
+
         private async Task<MessageEntity?> CheckIfExistsAndReturn(Guid messageId)
         {
             if (!await MessageExists(messageId))
@@ -72,5 +97,7 @@ namespace pimi_connect_api.Services
             var saved = await _dbContext.SaveChangesAsync();
             return saved > 0 ? true : false;
         }
+
+        
     }
 }

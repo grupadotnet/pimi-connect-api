@@ -34,6 +34,43 @@ public static class DataGenerator
         return mapper.Map<UserDto>(userEntity);
     }
     #endregion
+
+    #region Generate Message related data
+
+    public static string GenerateMessageContent(Guid id = new())
+    {
+        return $"messageContent{id}";
+    }
+
+    public static DateTime GenerateMessageCreatedDate()
+    {
+        return DateTime.Now;
+    }
+
+    public static MessageEntity GenerateMessageEntity(Guid id = new())
+    {
+        return new MessageEntity()
+        {
+            Id = id,
+            Content = GenerateMessageContent(id),
+            CreatedDate = GenerateMessageCreatedDate(),
+            IsDeleted = false,
+            UserCreatedId = Guid.NewGuid(),
+            AttachmentId = Guid.NewGuid(),
+            PasswordContainerId = Guid.NewGuid()
+        };
+    }
+
+    public static MessageDto GenerateMessageDto(IMapper mapper, Guid id = new())
+    {
+        var messageEntity = GenerateMessageEntity(id);
+
+        return mapper.Map<MessageDto>(messageEntity);
+    }
+
+    #endregion
+
+
     
     #region Generate Attachment related data
     public static AttachmentEntity GenerateAttachmentEntity(Guid id = new ())
@@ -55,4 +92,5 @@ public static class DataGenerator
         return mapper.Map<AttachmentDto>(attachmentEntity);
     }
     #endregion
+
 }
