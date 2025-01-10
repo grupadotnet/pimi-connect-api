@@ -5,7 +5,7 @@ using pimi_connect_api.UnitTests.Base;
 namespace pimi_connect_api.UnitTests.ControllersTests;
 
 [Collection("TestsWhichUseDatabase_pimi-connect-test")]
-public class AttachmentControllerTests : ControllerUnitTestsBase<AttachmentDto>
+public class AttachmentControllerTests : ControllerTestsBase<AttachmentDto>
 {
     private AttachmentController _attachmentController;
     

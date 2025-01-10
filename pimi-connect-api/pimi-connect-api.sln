@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pimi-connect-api.API", "pim
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pimi-connect-api.Data", "pimi-connect-api.Data\pimi-connect-api.Data.csproj", "{A8E47DDB-D67E-4B96-86B7-499D7BC1C2A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pimi-connect-api.UnitTests", "pimi-connect-api.UnitTests\pimi-connect-api.UnitTests.csproj", "{AE58D6D6-F050-48A8-B303-EB30933D2208}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pimi-connect-api.Tests", "pimi-connect-api.Tests\pimi-connect-api.Tests.csproj", "{AE58D6D6-F050-48A8-B303-EB30933D2208}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
