@@ -6,7 +6,7 @@ using pimi_connect_app.Data.MappingProfiles;
 
 namespace pimi_connect_api.UnitTests.Base;
 
-public abstract class ControllerUnitTestsBase<TDtoType>  where TDtoType : class
+public abstract class ControllerTestsBase<TDtoType>  where TDtoType : class
 {
     #region Properties
     protected AppDbContext TestDbContext { get; private set; }
@@ -19,7 +19,7 @@ public abstract class ControllerUnitTestsBase<TDtoType>  where TDtoType : class
     protected Guid NotExistingId { get; private set; }
     #endregion
     
-    protected ControllerUnitTestsBase()
+    protected ControllerTestsBase()
     {
         SetupConfiguration();
         SetupSettings();
