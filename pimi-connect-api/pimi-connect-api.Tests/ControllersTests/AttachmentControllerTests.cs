@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http;
+using pimi_connect_api.Attachment;
 using pimi_connect_api.Exceptions;
 using pimi_connect_api.UnitTests.Base;
 

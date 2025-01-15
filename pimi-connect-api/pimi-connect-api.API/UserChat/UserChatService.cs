@@ -6,40 +6,37 @@ using pimi_connect_app.Data.AppDbContext;
 using pimi_connect_app.Data.Entities;
 using pimi_connect_app.Data.Models;
 
-namespace pimi_connect_api.Services;
+namespace pimi_connect_api.UserChat;
 
 public class UserChatService : IUserChatService
 {
-    private readonly AppDbContext _dbContext;
     private readonly IMapper _mapper;
+    private readonly UserChatRepository _repository;
 
     public UserChatService(AppDbContext dbContext, IMapper mapper)
     {
-        _dbContext = dbContext;
         _mapper = mapper;
+        _repository = new UserChatRepository(dbContext);
     }
 
     public async Task<UserChatDto> GetUserChatAsync(Guid id)
     {
         #region Check and reject if doesn't exist
-        var checkResult = await CheckIfExistsAndReturn(id);
+        var userChatEntity = await _repository.GetById(id);
 
-        if (!checkResult.Exists)
+        if (userChatEntity == null)
         {
             throw new NotFound404Exception("UserChat", id.ToString());
         }
         #endregion
 
-        var userChaDto = _mapper.Map<UserChatDto>(checkResult.Entity);
+        var userChaDto = _mapper.Map<UserChatDto>(userChatEntity);
         return userChaDto;
     }
 
     public async Task<IEnumerable<UserChatDto>> GetAllUserChatsAsync()
     {
-        var userChatEntities = await _dbContext
-            .UserChats
-            .AsNoTracking()
-            .ToListAsync();
+        var userChatEntities = await _repository.GetAll();
         
         var userChatDtoList = _mapper.Map<List<UserChatDto>>(userChatEntities);
         return userChatDtoList;
@@ -48,10 +45,9 @@ public class UserChatService : IUserChatService
     public async Task<UserChatDto> AddUserChatAsync(UserChatDto userChatDto)
     {
         #region Check and reject if already exists
-        
-        var checkResultById = await CheckIfExistsAndReturn(userChatDto.ChatId); //TODO: change ChatId to dedicated Id
-        
-        if (checkResultById.Exists)
+        var userChatEntity = await _repository.GetById(userChatDto.ChatId);
+
+        if (userChatEntity != null)
         {
             throw new BadRequest400Exception(
                 $"UserChat with id {userChatDto.ChatId} already exists.");
@@ -59,56 +55,43 @@ public class UserChatService : IUserChatService
         #endregion
         
         var userChatEntityToAdd = _mapper.Map<UserChatEntity>(userChatDto);
-        
-        var addedUserChatEntity = await _dbContext.UserChats.AddAsync(userChatEntityToAdd);
-        await _dbContext.SaveChangesAsync();
 
-        var addedUserChatDto = _mapper.Map<UserChatDto>(addedUserChatEntity.Entity);
+        var addedUserChatEntity = await _repository.Add(userChatEntityToAdd);
+
+        var addedUserChatDto = _mapper.Map<UserChatDto>(addedUserChatEntity);
         return addedUserChatDto;
     }
 
     public async Task DeleteUserChatAsync(Guid id)
     {
         #region Check and reject if doesn't exist
-        var checkResult = await CheckIfExistsAndReturn(id);
-        
-        if (!checkResult.Exists)
+        var userChatEntity = await _repository.GetById(id);
+
+        if (userChatEntity == null)
         {
             throw new NotFound404Exception("UserChat", id.ToString());
         }
         #endregion
 
-        _dbContext.UserChats.Remove(checkResult.Entity);
-        await _dbContext.SaveChangesAsync();
+        await _repository.Delete(userChatEntity);
     }
 
     public async Task<UserChatDto> UpdateUserChatAsync(UserChatDto userChatDto)
     {
         #region Check and reject if doesn't exist
-        var checkResult = await CheckIfExistsAndReturn(userChatDto.ChatId); //TODO: change ChatId to dedicated Id
-        
-        if (!checkResult.Exists)
+        var userChatEntity = await _repository.GetById(userChatDto.ChatId);
+
+        if (userChatEntity == null)
         {
             throw new NotFound404Exception("UserChat", userChatDto.ChatId.ToString());
         }
         #endregion
 
         var userChatEntityToUpdate = _mapper.Map<UserChatEntity>(userChatDto);
-        
-        var updatedUserChatEntity = _dbContext.Update(userChatEntityToUpdate);
-        await _dbContext.SaveChangesAsync();
 
-        var updatedUserChatDto = _mapper.Map<UserChatDto>(updatedUserChatEntity.Entity);
+        var updatedUserChatEntity = await _repository.Update(userChatEntityToUpdate);
+
+        var updatedUserChatDto = _mapper.Map<UserChatDto>(updatedUserChatEntity);
         return updatedUserChatDto;
-    }
-
-    private async Task<(bool Exists, UserChatEntity? Entity)> CheckIfExistsAndReturn(Guid id)
-    {
-        var userChatEntity = await _dbContext
-            .UserChats
-            .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Id == id);
-
-        return (userChatEntity != null, userChatEntity);
     }
 }

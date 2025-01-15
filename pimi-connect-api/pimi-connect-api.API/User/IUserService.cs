@@ -1,6 +1,6 @@
 using pimi_connect_app.Data.Models;
 
-namespace pimi_connect_api.Services.Interfaces;
+namespace pimi_connect_api.User;
 
 public interface IUserService
 {
