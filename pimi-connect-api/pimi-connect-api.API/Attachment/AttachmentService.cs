@@ -9,13 +9,11 @@ namespace pimi_connect_api.Attachment;
 
 public class AttachmentService : IAttachmentService
 {
-    private readonly AppDbContext _dbContext;
     private readonly IMapper _mapper;
     private readonly AttachmentRepository _repository;
 
     public AttachmentService(AppDbContext dbContext, IMapper mapper)
     {
-        _dbContext = dbContext;
         _mapper = mapper;
         _repository = new AttachmentRepository(dbContext);
     }
@@ -66,7 +64,7 @@ public class AttachmentService : IAttachmentService
     {
         var attachment = await _repository.GetById(attachmentDto.Id);
 
-        if (attachment == null)
+        if (attachment != null)
         {
             throw new BadRequest400Exception(
                 $"Attachment with id {attachmentDto.Id} already exists.");

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using pimi_connect_api.Exceptions;
 using pimi_connect_api.UnitTests.Base;
+using pimi_connect_api.User;
 
 namespace pimi_connect_api.UnitTests.ControllersTests;
 
