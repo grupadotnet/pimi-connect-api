@@ -7,6 +7,7 @@ using pimi_connect_api.Middleware;
 using pimi_connect_api.Services;
 using pimi_connect_api.Services.Interfaces;
 using pimi_connect_api.User;
+using pimi_connect_api.UserChat;
 using pimi_connect_app.Data.AppDbContext;
 using pimi_connect_app.Data.Models;
 using pimi_connect_app.Data.Models.Validators;
