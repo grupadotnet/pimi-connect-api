@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using pimi_connect_api.Services.Interfaces;
 using pimi_connect_app.Data.Models;
 
-namespace pimi_connect_api.Controllers;
+namespace pimi_connect_api.UserChat;
 
 [ApiController]
 [Route("api/[controller]")]
