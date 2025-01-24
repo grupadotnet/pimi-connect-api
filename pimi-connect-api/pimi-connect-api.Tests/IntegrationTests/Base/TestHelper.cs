@@ -1,9 +1,7 @@
 using AutoMapper;
 using pimi_connect_app.Data.AppDbContext;
-using pimi_connect_app.Data.Entities;
-using pimi_connect_app.Data.Enums;
 
-namespace pimi_connect_api.UnitTests.Shared;
+namespace pimi_connect_api.Tests.IntegrationTests.Base;
 
 public class TestHelper
 {
@@ -21,7 +19,7 @@ public class TestHelper
         await _testDbContext.Database.EnsureDeletedAsync();
         await _testDbContext.Database.EnsureCreatedAsync();
     }
-
+    
     #region Fill tables
     public async Task FillUsersTable(List<Guid> idsToAdd)
     {
@@ -51,5 +49,4 @@ public class TestHelper
         _testDbContext.ChangeTracker.Clear();
     }
     #endregion
-    
 }

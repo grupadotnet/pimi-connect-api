@@ -1,4 +1,4 @@
-namespace pimi_connect_api.UnitTests.Shared;
+namespace pimi_connect_api.Tests.IntegrationTests.Base;
 
 public class TestSettings
 {
