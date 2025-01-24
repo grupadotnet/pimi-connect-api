@@ -1,7 +1,7 @@
 namespace pimi_connect_api.Tests.UnitTests.Base;
 
-public static class UnitTestsSettings
+public class UnitTestsSettings
 {
-    public static int DummyCount = 10;
-    public static int DummyStringMaxLength = 20;
+    public int DummyCount { get; set; }
+    public int DummyStringMaxLength { get; set; }
 }

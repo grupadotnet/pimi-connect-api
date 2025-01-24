@@ -11,7 +11,7 @@ public abstract class IntegrationTestsBase<TDtoType>  where TDtoType : class
     #region Properties
     protected AppDbContext TestDbContext { get; private set; }
     protected IConfiguration Configuration { get; private set; }
-    protected TestSettings Settings { get; private set; }
+    protected IntegrationTestsSettings Settings { get; private set; }
     protected IMapper Mapper { get; private set; }
     protected TestHelper Helper { get; }
     protected List<Guid> ExistingIds { get; private set; }
@@ -89,13 +89,13 @@ public abstract class IntegrationTestsBase<TDtoType>  where TDtoType : class
 
     private void SetupSettings()
     {
-        Settings = new TestSettings();
-        Configuration.GetSection("TestSettings")
+        Settings = new IntegrationTestsSettings();
+        Configuration.GetSection("IntegrationTestsSettings")
             .Bind(Settings, c => c.BindNonPublicProperties = true);
 
         if (Settings == null)
         {
-            throw new InvalidOperationException("Could not get TestSettings correctly.");
+            throw new InvalidOperationException("Could not get IntegrationTestsSettings correctly.");
         }
     }
     
