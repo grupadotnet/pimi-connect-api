@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Http;
 using pimi_connect_api.Exceptions;
-using pimi_connect_api.UnitTests.Base;
+using pimi_connect_api.Tests.IntegrationTests.Base;
 using pimi_connect_api.User;
 
-namespace pimi_connect_api.UnitTests.ControllersTests;
+namespace pimi_connect_api.Tests.IntegrationTests;
 
 [Collection("TestsWhichUseDatabase_pimi-connect-test")]
-public class UserControllerTests : ControllerTestsBase<UserDto>
+public class UserControllerTests : IntegrationTestsBase<UserDto>
 {
     private UserController _userController;
     
@@ -21,7 +21,8 @@ public class UserControllerTests : ControllerTestsBase<UserDto>
         }
         
         // initialize Controller
-        var userService = new UserService(TestDbContext, Mapper);
+        var userRepository = new UserRepository(TestDbContext);
+        var userService = new UserService(Mapper, userRepository);
         _userController = new UserController(userService);
     }
     

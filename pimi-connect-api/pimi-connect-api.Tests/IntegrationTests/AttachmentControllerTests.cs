@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Http;
 using pimi_connect_api.Attachment;
 using pimi_connect_api.Exceptions;
-using pimi_connect_api.UnitTests.Base;
+using pimi_connect_api.Tests.IntegrationTests.Base;
 
-namespace pimi_connect_api.UnitTests.ControllersTests;
+namespace pimi_connect_api.Tests.IntegrationTests;
 
 [Collection("TestsWhichUseDatabase_pimi-connect-test")]
-public class AttachmentControllerTests : ControllerTestsBase<AttachmentDto>
+public class AttachmentIntegrationTests : IntegrationTestsBase<AttachmentDto>
 {
     private AttachmentController _attachmentController;
     
@@ -20,7 +20,8 @@ public class AttachmentControllerTests : ControllerTestsBase<AttachmentDto>
         }
         
         // initialize Controller
-        var attachmentService = new AttachmentService(TestDbContext, Mapper);
+        var attachmentRepository = new AttachmentRepository(TestDbContext);
+        var attachmentService = new AttachmentService(Mapper, attachmentRepository);
         _attachmentController = new AttachmentController(attachmentService);
     }
     
