@@ -3,14 +3,17 @@ using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using pimi_connect_api.Attachment;
 using pimi_connect_api.Hubs;
+using pimi_connect_api.Message;
 using pimi_connect_api.Middleware;
 using pimi_connect_api.Services;
 using pimi_connect_api.Services.Interfaces;
 using pimi_connect_api.User;
 using pimi_connect_api.UserChat;
 using pimi_connect_app.Data.AppDbContext;
+using pimi_connect_app.Data.Entities;
 using pimi_connect_app.Data.Models;
 using pimi_connect_app.Data.Models.Validators;
+using pimi_connect_app.Data.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +31,12 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAttachmentService, AttachmentService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IUserChatService, UserChatService>();
+
+// Repositories
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAttachmentRepository, AttachmentRepository>();
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped<IUserChatRepository, UserChatRepository>();
 
 // Validators
 builder.Services.AddScoped<IValidator<UserDto>, UserDtoValidator>();

@@ -11,12 +11,12 @@ namespace pimi_connect_api.UserChat;
 public class UserChatService : IUserChatService
 {
     private readonly IMapper _mapper;
-    private readonly UserChatRepository _repository;
+    private readonly IUserChatRepository _repository;
 
-    public UserChatService(AppDbContext dbContext, IMapper mapper)
+    public UserChatService(IMapper mapper, IUserChatRepository repository)
     {
         _mapper = mapper;
-        _repository = new UserChatRepository(dbContext);
+        _repository = repository;
     }
 
     public async Task<UserChatDto> GetUserChatAsync(Guid id)

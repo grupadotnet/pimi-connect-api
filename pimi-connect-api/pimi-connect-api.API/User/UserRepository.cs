@@ -5,7 +5,7 @@ using pimi_connect_app.Data.Repository;
 
 namespace pimi_connect_api.User;
 
-public class UserRepository : IRepository<UserEntity>, IUserRepository
+public class UserRepository : IUserRepository
 {
     private readonly AppDbContext _dbContext;
     

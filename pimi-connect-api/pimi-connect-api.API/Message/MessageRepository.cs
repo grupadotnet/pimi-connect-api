@@ -5,7 +5,7 @@ using pimi_connect_app.Data.Repository;
 
 namespace pimi_connect_api.Message;
 
-public class MessageRepository : IRepository<MessageEntity>, IMessageRepository
+public class MessageRepository : IMessageRepository
 {
     private readonly AppDbContext _dbContext;
     

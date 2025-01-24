@@ -1,25 +1,22 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using pimi_connect_api.Exceptions;
-using pimi_connect_api.Message;
 using pimi_connect_api.Services.Interfaces;
-using pimi_connect_app.Data.AppDbContext;
 using pimi_connect_app.Data.Entities;
 using pimi_connect_app.Data.Models;
-using pimi_connect_app.Data.Repository;
 
-namespace pimi_connect_api.Services
+namespace pimi_connect_api.Message
 {
     public class MessageService : IMessageService
     {
         private readonly IMapper _mapper;
-        private readonly MessageRepository _repository;
+        private readonly IMessageRepository _repository;
 
-        public MessageService(AppDbContext dbContext, IMapper mapper)
+        public MessageService(IMapper mapper, IMessageRepository repository)
         {
             _mapper = mapper;
-            _repository = new MessageRepository(dbContext);
+            _repository = repository;
         }
+        
         public Task<MessageDto> AddMessageAsync(MessageDto messageDto)
         {
             throw new NotImplementedException();
