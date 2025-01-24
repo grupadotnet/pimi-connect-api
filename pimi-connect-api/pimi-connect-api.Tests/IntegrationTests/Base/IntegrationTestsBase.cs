@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.Extensions.Configuration;
+using pimi_connect_api.Tests.Shared;
 using pimi_connect_api.UnitTests.Shared;
 using pimi_connect_app.Data.AppDbContext;
 
