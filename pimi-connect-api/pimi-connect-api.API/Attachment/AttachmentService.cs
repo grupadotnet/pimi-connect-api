@@ -10,12 +10,12 @@ namespace pimi_connect_api.Attachment;
 public class AttachmentService : IAttachmentService
 {
     private readonly IMapper _mapper;
-    private readonly AttachmentRepository _repository;
+    private readonly IAttachmentRepository _repository;
 
-    public AttachmentService(AppDbContext dbContext, IMapper mapper)
+    public AttachmentService(IMapper mapper, IAttachmentRepository repository)
     {
         _mapper = mapper;
-        _repository = new AttachmentRepository(dbContext);
+        _repository = repository;
     }
     
     public async Task<AttachmentDto> GetAttachmentAsync(Guid id)

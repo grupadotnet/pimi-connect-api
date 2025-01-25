@@ -1,6 +1,6 @@
-namespace pimi_connect_api.UnitTests.Shared;
+namespace pimi_connect_api.Tests.IntegrationTests.Base;
 
-public class TestSettings
+public class IntegrationTestsSettings
 {
     public int EntitiesCount { get; set; }
     public string ConnectionStringName { get; set; }

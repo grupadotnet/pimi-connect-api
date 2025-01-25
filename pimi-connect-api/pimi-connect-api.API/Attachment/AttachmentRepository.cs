@@ -5,7 +5,7 @@ using pimi_connect_app.Data.Repository;
 
 namespace pimi_connect_api.Attachment;
 
-public class AttachmentRepository : IRepository<AttachmentEntity>
+public class AttachmentRepository : IAttachmentRepository
 {
     private readonly AppDbContext _dbContext;
     

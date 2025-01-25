@@ -1,17 +1,17 @@
 using AutoMapper;
 using Microsoft.Extensions.Configuration;
+using pimi_connect_api.Tests.Shared;
 using pimi_connect_api.UnitTests.Shared;
 using pimi_connect_app.Data.AppDbContext;
-using pimi_connect_app.Data.MappingProfiles;
 
-namespace pimi_connect_api.UnitTests.Base;
+namespace pimi_connect_api.Tests.IntegrationTests.Base;
 
-public abstract class ControllerTestsBase<TDtoType>  where TDtoType : class
+public abstract class IntegrationTestsBase<TDtoType>  where TDtoType : class
 {
     #region Properties
     protected AppDbContext TestDbContext { get; private set; }
     protected IConfiguration Configuration { get; private set; }
-    protected TestSettings Settings { get; private set; }
+    protected IntegrationTestsSettings Settings { get; private set; }
     protected IMapper Mapper { get; private set; }
     protected TestHelper Helper { get; }
     protected List<Guid> ExistingIds { get; private set; }
@@ -19,7 +19,7 @@ public abstract class ControllerTestsBase<TDtoType>  where TDtoType : class
     protected Guid NotExistingId { get; private set; }
     #endregion
     
-    protected ControllerTestsBase()
+    protected IntegrationTestsBase()
     {
         SetupConfiguration();
         SetupSettings();
@@ -85,30 +85,23 @@ public abstract class ControllerTestsBase<TDtoType>  where TDtoType : class
             .Build();
 
         Configuration = configuration;
-
-        
     }
 
     private void SetupSettings()
     {
-        Settings = new TestSettings();
-        Configuration.GetSection("TestSettings")
+        Settings = new IntegrationTestsSettings();
+        Configuration.GetSection("IntegrationTestsSettings")
             .Bind(Settings, c => c.BindNonPublicProperties = true);
 
         if (Settings == null)
         {
-            throw new InvalidOperationException("Could not get TestSettings correctly.");
+            throw new InvalidOperationException("Could not get IntegrationTestsSettings correctly.");
         }
     }
     
     private void SetupMapper()
     {
-        var mapperConfig = new MapperConfiguration(cfg => 
-        {
-            cfg.AddProfile(new MappingProfile());
-        });
-
-        Mapper = new Mapper(mapperConfig);
+        Mapper = Utils.CreateMapper();
     }
     
     private void SetupTestDbContext()
@@ -133,12 +126,7 @@ public abstract class ControllerTestsBase<TDtoType>  where TDtoType : class
     
     private void SetExistingIds()
     {
-        ExistingIds = new List<Guid>();
-        
-        for (var i = 0; i < Settings.EntitiesCount; i++)
-        {
-            ExistingIds.Add(Guid.NewGuid());
-        }
+        ExistingIds = Utils.CreateGuids(Settings.EntitiesCount);
     }
 
     private void SetExistingId()

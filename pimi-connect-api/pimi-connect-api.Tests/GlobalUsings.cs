@@ -2,6 +2,8 @@ global using Xunit;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.AspNetCore.Mvc;
 
+global using Moq;
+
 global using pimi_connect_api.Controllers;
 global using pimi_connect_api.Services;
 

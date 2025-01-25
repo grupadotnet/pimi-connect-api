@@ -5,7 +5,7 @@ using pimi_connect_app.Data.Repository;
 
 namespace pimi_connect_api.UserChat;
 
-public class UserChatRepository : IRepository<UserChatEntity>
+public class UserChatRepository : IUserChatRepository
 {
     private readonly AppDbContext _dbContext;
     

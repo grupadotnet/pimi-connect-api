@@ -11,12 +11,12 @@ namespace pimi_connect_api.User;
 public class UserService : IUserService
 {
     private readonly IMapper _mapper;
-    private readonly UserRepository _repository;
+    private readonly IUserRepository _repository;
 
-    public UserService(AppDbContext dbContext, IMapper mapper)
+    public UserService(IMapper mapper, IUserRepository repository)
     {
         _mapper = mapper;
-        _repository = new UserRepository(dbContext);
+        _repository = repository;
     }
     
     public async Task<UserDto> GetUserAsync(Guid id)
